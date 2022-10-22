@@ -73,27 +73,6 @@
 - Search Screen
     - => Card Details
 
-Tab Navigation (Tab to Screen)
-
-    Home Feed
-    Search User
-    Post a Photo
-
-Flow Navigation (Screen to Screen)
-
-    Login Screen
-        => Home
-    Registration Screen
-        => Home
-    Stream Screen
-        => None, but future version will likely involve navigation to a detailed screen to see comments for each photo.
-    Creation Screen
-        => Home (after you finish posting the photo)
-        => In the actual wireframe, you will need multiple screens to represent the creation process to add filters, etc.
-    Search Screen
-        => None
-
-
 ## Wireframes
 
 [Add picture of your hand sketched wireframes in this section]
