@@ -49,7 +49,7 @@
   - Popularity (stretch)
 - Search
   - Search up specific cards using their names
-  - View very card (stretch)
+  - View every card (stretch)
 - Profile
   - View User collection and collection value(stretch)
 
