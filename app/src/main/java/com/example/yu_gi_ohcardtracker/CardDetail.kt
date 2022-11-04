@@ -21,7 +21,9 @@ data class CardDetail (
     @SerializedName("def")
     val def: Int? = null,
     @SerializedName("card_prices")
-    val price: List<CardPrices>? = null,
+    val prices: List<CardPrices>? = null,
+    @SerializedName("card_images")
+    val images: List<CardImages>? = null,
 ) : java.io.Serializable
 
 @Keep
@@ -33,4 +35,13 @@ data class CardPrices (
     val tcgPlayerPrice: String? = null,
     @SerializedName("ebay_price")
     val ebayPrice: String? = null,
+): java.io.Serializable
+
+@Keep
+@Serializable
+data class CardImages (
+    @SerializedName("image_url")
+    val imageUrl: String? = null,
+    @SerializedName("image_url_small")
+    val imageUrlSmall: String? = null,
 ): java.io.Serializable

@@ -1,10 +1,12 @@
 package com.example.yu_gi_ohcardtracker
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
@@ -36,6 +38,9 @@ class CardDetailActivity : AppCompatActivity() {
         cardDef = findViewById(R.id.cardDef)
         cardPrice = findViewById(R.id.cardPrice)
 
+
+        var imgUrl = ""
+
         // Get the name from the intent and make new webrequest with it.
         val currentCard = intent.getSerializableExtra("theCard")
 
@@ -54,10 +59,7 @@ class CardDetailActivity : AppCompatActivity() {
                     ) {
                         val resultsJSON : JSONArray = json.jsonObject.getJSONArray("data")
                         val gson = Gson()
-
-                        //val cardDeats = Gson().fromJson(resultsJSON.toString(), CardDetail::class.java)
                         val arrayCards = object : TypeToken<List<CardDetail>>() {}.type
-
                         val models : List<CardDetail> = gson.fromJson(resultsJSON.toString(), arrayCards)
 
                         cardName.text = models[0].name
@@ -65,11 +67,15 @@ class CardDetailActivity : AppCompatActivity() {
                         cardLevel.text = "Level " + models[0].level.toString()
                         cardAtk.text = "Atk: " + models[0].atk.toString()
                         cardDef.text = "Def: " + models[0].def.toString()
-                        cardPrice.text = models[0].price?.get(0)?.cardmarket_price.toString()
-                        //cardPrice.text = "Price: " + cardDeats.price?.diffPrice?.cMPrice.toString()
+                        cardPrice.text = "Price: " + models[0].prices?.get(0)?.cardmarket_price.toString()
+                        Glide.with(this@CardDetailActivity)
+                            .load(models[0].images?.get(0)?.imageUrl.toString())
+                            .into(cardImage)
+                        imgUrl = models[0].images?.get(0)?.imageUrl.toString()
+                        // cardPrice.text = "Price: " + cardDeats.price?.diffPrice?.cMPrice.toString()
                         // Look for this in Logcat:
                         Log.d("Response", resultsJSON.toString())
-                        Log.d("Response", models[0].price?.get(0).toString())
+                        Log.d("Response", models[0].prices?.get(0).toString())
                     }
 
                     /*
@@ -89,6 +95,15 @@ class CardDetailActivity : AppCompatActivity() {
                         }
                     }
                 }]
+
+        findViewById<ImageView>(R.id.cardImage).setOnClickListener{
+            // If there is an image url then open a new activity to show large picture.
+            if (imgUrl != null) {
+                val cardLargeIntent = Intent(this, CardLarge::class.java)
+                cardLargeIntent.putExtra("theCard", imgUrl)
+                this?.startActivity(cardLargeIntent)
+            }
+        }
 
 
     }
