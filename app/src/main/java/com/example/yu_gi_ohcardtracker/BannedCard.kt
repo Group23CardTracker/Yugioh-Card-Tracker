@@ -18,13 +18,22 @@ data class BannedCard(
     val name: String?,
     @SerialName("card_images")
     val images: List<Images>?,
+    @SerialName("banlist_info")
+    val banlistInfo: BanStatus?
 ) : java.io.Serializable{
     val imageUrl = images?.firstOrNull{it.url != null}?.url ?: ""
 }
 
 @Keep
 @Serializable
+data class BanStatus(
+    @SerialName("ban_tcg")
+    val banStatus: String?
+) : java.io.Serializable
+
+@Keep
+@Serializable
 data class Images(
     @SerialName("image_url")
-    val url: String?,
+    val url: String?
 ) : java.io.Serializable

@@ -1,6 +1,7 @@
 package com.example.yu_gi_ohcardtracker
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ class BannedAdapter(private val context: Context, private val banned: List<Banne
 
         private val bannedCardTextView = itemView.findViewById<TextView>(R.id.card_banned_name)
         private val bannedCardImageView = itemView.findViewById<ImageView>(R.id.card_banned_image)
+        private val bannedCardStatusTextView = itemView.findViewById<TextView>(R.id.card_banned_status)
 
         init{
             itemView.setOnClickListener(this)
@@ -36,6 +38,11 @@ class BannedAdapter(private val context: Context, private val banned: List<Banne
 
         fun bind(bannedCard: BannedCard){
             bannedCardTextView.text = bannedCard.name
+            val bantext = bannedCard.banlistInfo?.banStatus
+            bannedCardStatusTextView.text = bantext
+            if(bantext == "Banned") bannedCardStatusTextView.setTextColor(Color.RED)
+            else if(bantext == "Limited") bannedCardStatusTextView.setTextColor(Color.parseColor("#FFA500"))
+            else bannedCardStatusTextView.setTextColor(Color.YELLOW)
 
             Glide.with(context).load(bannedCard.imageUrl).into(bannedCardImageView)
         }

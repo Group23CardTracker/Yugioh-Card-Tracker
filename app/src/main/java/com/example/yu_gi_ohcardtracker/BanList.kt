@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
@@ -32,10 +33,12 @@ class BanList : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_ban_list, container, false)
-
-        val layoutManager = LinearLayoutManager(context)
+        
         bannedCardRecyclerView = view.findViewById(R.id.banlist_recycler_view)
-        bannedCardRecyclerView.layoutManager = layoutManager
+        bannedCardRecyclerView.layoutManager = LinearLayoutManager(context).also{
+            val dividerItemDecoration = DividerItemDecoration(context, it.orientation)
+            bannedCardRecyclerView.addItemDecoration(dividerItemDecoration)
+        }
         bannedCardRecyclerView.setHasFixedSize(true)
         bannedCardAdapter = BannedAdapter(view.context, bannedCards)
         bannedCardRecyclerView.adapter = bannedCardAdapter
