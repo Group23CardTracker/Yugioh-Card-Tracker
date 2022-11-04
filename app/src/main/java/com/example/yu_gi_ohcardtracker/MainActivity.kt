@@ -5,7 +5,13 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.serialization.json.Json
 
+fun createJson() = Json {
+    isLenient = true
+    ignoreUnknownKeys = true
+    useAlternativeNames = false
+}
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

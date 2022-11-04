@@ -1,32 +1,29 @@
 package com.example.yu_gi_ohcardtracker
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.codepath.asynchttpclient.AsyncHttpClient
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import okhttp3.Headers
+import org.json.JSONException
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val TAG = "BannedListFragment"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [BanList.newInstance] factory method to
- * create an instance of this fragment.
- */
 class BanList : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private val bannedCards = mutableListOf<BannedCard>()
+    private lateinit var bannedCardRecyclerView: RecyclerView
+    private lateinit var bannedCardAdapter: BannedAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
@@ -34,26 +31,49 @@ class BanList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ban_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_ban_list, container, false)
+
+        val layoutManager = LinearLayoutManager(context)
+        bannedCardRecyclerView = view.findViewById(R.id.banlist_recycler_view)
+        bannedCardRecyclerView.layoutManager = layoutManager
+        bannedCardRecyclerView.setHasFixedSize(true)
+        bannedCardAdapter = BannedAdapter(view.context, bannedCards)
+        bannedCardRecyclerView.adapter = bannedCardAdapter
+        return view
+    }
+
+    private fun fetchCards(){
+        val client = AsyncHttpClient()
+        client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?banlist=tcg", object : JsonHttpResponseHandler(){
+            override fun onFailure(
+                statusCode: Int,
+                headers: Headers?,
+                response: String?,
+                throwable: Throwable?
+            ) {
+                Log.e(TAG, "Failed to fetch Cards: $statusCode")
+            }
+            override fun onSuccess(statusCode: Int, headers: Headers, json: JSON){
+                Log.i(TAG, "Successfully fetched Cards: $json")
+                try{
+                    val parsedJson = createJson().decodeFromString(
+                        SearchNewData.serializer(),
+                        json.jsonObject.toString()
+                    )
+                    parsedJson.data?.let{list ->
+                        bannedCards.addAll(list)
+                    }
+                    bannedCardAdapter.notifyDataSetChanged()
+                } catch(e: JSONException){
+                    Log.e(TAG, "Exception: $e")
+                }
+            }
+        })
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BanList.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            BanList().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance(): BanList{
+            return BanList()
+        }
     }
 }
