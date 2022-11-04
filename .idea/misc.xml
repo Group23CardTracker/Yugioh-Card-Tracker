@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Code Projects/Android Projects/Yugioh-Card-Tracker/app/src/main/res/layout/activity_main.xml" value="0.3" />
         <entry key="..\:/Code Projects/Android Projects/Yugioh-Card-Tracker/app/src/main/res/layout/fragment_ban_list.xml" value="0.3625" />
         <entry key="..\:/Code Projects/Android Projects/Yugioh-Card-Tracker/app/src/main/res/layout/item_banlist.xml" value="0.3625" />
         <entry key="..\:/Users/Laptop/AndroidStudioProjects/Yugioh-Card-Tracker/app/src/main/res/layout/activity_main.xml" value="0.14722222222222223" />

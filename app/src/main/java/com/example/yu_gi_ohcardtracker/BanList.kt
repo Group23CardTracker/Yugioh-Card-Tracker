@@ -42,6 +42,11 @@ class BanList : Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        fetchCards()
+    }
+
     private fun fetchCards(){
         val client = AsyncHttpClient()
         client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?banlist=tcg", object : JsonHttpResponseHandler(){

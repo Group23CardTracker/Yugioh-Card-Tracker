@@ -6,16 +6,25 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.serialization.json.Json
+import com.example.yu_gi_ohcardtracker.databinding.ActivityMainBinding
 
 fun createJson() = Json {
     isLenient = true
     ignoreUnknownKeys = true
     useAlternativeNames = false
 }
+
 class MainActivity : AppCompatActivity() {
+    
+    private lateinit var binding: ActivityMainBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        
+        setContentView(view)
         val fragmentManager: FragmentManager = supportFragmentManager
 
         // define your fragments here
