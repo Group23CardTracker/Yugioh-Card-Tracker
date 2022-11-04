@@ -74,10 +74,4 @@
     - => Card Details
 
 ## Wireframes
-
-[Add picture of your hand sketched wireframes in this section]
 <img src="https://github.com/Group23CardTracker/Yugioh-Card-Tracker/blob/main/wireframes.jpg" width=600>
-
-### [BONUS] Digital Wireframes & Mockups
-
-### [BONUS] Interactive Prototype
