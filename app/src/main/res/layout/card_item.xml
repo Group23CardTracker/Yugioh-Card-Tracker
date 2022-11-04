@@ -12,11 +12,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="200dp"
+        android:maxLines="2"
         android:padding="5dp"
+        android:textAlignment="viewStart"
         android:textSize="10sp"
         android:textStyle="bold"
-        android:textAlignment="textEnd"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cardImage"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Card Name" />
 
@@ -29,8 +31,6 @@
         android:padding="5dp"
         android:textSize="10sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/cardNameTv"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="URL" />

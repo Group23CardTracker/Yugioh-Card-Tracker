@@ -24,6 +24,12 @@ class ItemAdapter(private val items: List<Card>,
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = items[position]
         holder.bind(item)
+
+        holder.itemView.setOnClickListener {
+            holder.itemView?.let { _ ->
+                mListener?.onItemClick(item)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -39,6 +45,7 @@ class ItemAdapter(private val items: List<Card>,
 
         fun bind(curItem: Card) {
             cardName.text = curItem.name
+            cardImage.text = curItem.img
         }
 
         override fun onClick(v: View?) {

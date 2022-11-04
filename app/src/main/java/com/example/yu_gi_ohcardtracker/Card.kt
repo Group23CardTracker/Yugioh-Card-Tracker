@@ -1,6 +1,7 @@
 package com.example.yu_gi_ohcardtracker
 
 import android.support.annotation.Keep
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -9,7 +10,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Card (
     @SerializedName("name")
-    val name: String?,
-//    @SerializedName("card_images")
-//    val img: List<>,
+    val name: String? = null,
+    @SerializedName("image_url")
+    val img: String? = null,
 ) : java.io.Serializable
+
