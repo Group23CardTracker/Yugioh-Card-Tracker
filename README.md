@@ -5,6 +5,8 @@
 1. [Overview](#Overview)
 1. [Product Spec](#Product-Spec)
 1. [Wireframes](#Wireframes)
+1. [User Stories](#User-Stories)
+1. [Video Walkthrough](#Video-Walkthrough)
 
 ## Overview
 
@@ -75,3 +77,23 @@
 
 ## Wireframes
 <img src="https://github.com/Group23CardTracker/Yugioh-Card-Tracker/blob/main/wireframes.jpg" width=600>
+
+## User Stories
+
+- [x] **User can view the current TCG banlist**
+- [x] **User can view newly released cards**
+- [x] **User can view the BanList offline**
+- [x] **User can view newly released cards offline**
+- [x] **User can select an item from a list to view in greater detail**
+- [x] **User can switch between viewing different lists**
+- [] **User can favorite a card**
+- [] **User can view every card**
+- [] **User can search for a specific card**
+- [] **User can view detailed information of the card**
+- [] **User can see pricing of the card**
+- [] **User can maintain a personal digital collection on the app**
+- [] **User can take pictures of their cards**
+
+## Video Walkthrough
+
+Here's a walkthrough of implemented user stories:
