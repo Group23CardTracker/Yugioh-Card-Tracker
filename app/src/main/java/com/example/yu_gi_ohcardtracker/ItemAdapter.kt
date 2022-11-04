@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+
 import androidx.recyclerview.widget.RecyclerView
 
-class ItemAdapter(private val context: Context, private val items: List<Card>) :
+class ItemAdapter(private val items: List<Card>,
+                  private val mListener: HomeInteractionListener?
+    ) :
     RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
 
@@ -36,7 +39,6 @@ class ItemAdapter(private val context: Context, private val items: List<Card>) :
 
         fun bind(curItem: Card) {
             cardName.text = curItem.name
-            cardImage.text = curItem.img
         }
 
         override fun onClick(v: View?) {

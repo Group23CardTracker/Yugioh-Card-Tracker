@@ -1,10 +1,14 @@
 package com.example.yu_gi_ohcardtracker
 
+import android.nfc.cardemulation.CardEmulation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +37,8 @@ class MainActivity : AppCompatActivity() {
 
         // Set default selection
         bottomNavigationView.selectedItemId = R.id.action_home
+
+
     }
 
 }
