@@ -6,11 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import okhttp3.Headers
 import org.json.JSONException
 
@@ -18,7 +21,7 @@ private const val TAG = "BannedListFragment"
 
 class BanList : Fragment() {
 
-    private val bannedCards = mutableListOf<BannedCard>()
+    private val bannedCards = mutableListOf<DisplayBanned>()
     private lateinit var bannedCardRecyclerView: RecyclerView
     private lateinit var bannedCardAdapter: BannedAdapter
 
@@ -42,6 +45,22 @@ class BanList : Fragment() {
         bannedCardRecyclerView.setHasFixedSize(true)
         bannedCardAdapter = BannedAdapter(view.context, bannedCards)
         bannedCardRecyclerView.adapter = bannedCardAdapter
+
+        lifecycleScope.launch{
+            (requireActivity().application as YugiohApplication).bandb.bannedDao().getAll().collect{ databaseList ->
+                databaseList.map {entity ->
+                    DisplayBanned(
+                        entity.name,
+                        entity.banStatus,
+                        entity.imageUrl
+                    )
+                }.also{mappedList ->
+                    bannedCards.clear()
+                    bannedCards.addAll(mappedList)
+                    bannedCardAdapter.notifyDataSetChanged()
+                }
+            }
+        }
         return view
     }
 
@@ -69,7 +88,18 @@ class BanList : Fragment() {
                         json.jsonObject.toString()
                     )
                     parsedJson.data?.let{list ->
-                        bannedCards.addAll(list)
+                        lifecycleScope.launch(IO) {
+                            (requireActivity().application as YugiohApplication).bandb.bannedDao()
+                                .deleteAll()
+                            (requireActivity().application as YugiohApplication).bandb.bannedDao()
+                                .insertAll(list.map {
+                                    BannedEntity(
+                                        name = it.name,
+                                        banStatus = it.banlistInfo?.banStatus,
+                                        imageUrl = it.imageUrl
+                                    )
+                                })
+                        }
                     }
                     bannedCardAdapter.notifyDataSetChanged()
                 } catch(e: JSONException){

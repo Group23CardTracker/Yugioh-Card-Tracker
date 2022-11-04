@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class BannedAdapter(private val context: Context, private val banned: List<BannedCard>) :
+class BannedAdapter(private val context: Context, private val banned: List<DisplayBanned>) :
     RecyclerView.Adapter<BannedAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,9 +36,9 @@ class BannedAdapter(private val context: Context, private val banned: List<Banne
             itemView.setOnClickListener(this)
         }
 
-        fun bind(bannedCard: BannedCard){
+        fun bind(bannedCard: DisplayBanned){
             bannedCardTextView.text = bannedCard.name
-            val bantext = bannedCard.banlistInfo?.banStatus
+            val bantext = bannedCard.banStatus
             bannedCardStatusTextView.text = bantext
             if(bantext == "Banned") bannedCardStatusTextView.setTextColor(Color.RED)
             else if(bantext == "Limited") bannedCardStatusTextView.setTextColor(Color.parseColor("#FFA500"))
