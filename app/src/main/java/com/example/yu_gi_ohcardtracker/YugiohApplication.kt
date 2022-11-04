@@ -4,4 +4,5 @@ import android.app.Application
 
 class YugiohApplication: Application(){
     val bandb by lazy {BannedAppDatabase.getInstance(this)}
+    val newcarddb by lazy {NewCardAppDatabase.getInstance(this)}
 }

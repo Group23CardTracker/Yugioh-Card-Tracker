@@ -6,11 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.Headers
 import org.json.JSONException
 import java.text.SimpleDateFormat
@@ -20,7 +23,7 @@ private const val TAG = "NewCardFragment"
 
 class NewCards : Fragment() {
 
-    private val newCards = mutableListOf<NewCard>()
+    private val newCards = mutableListOf<DisplayNewCard>()
     private lateinit var newCardAdapter: NewCardAdapter
     private lateinit var newCardsRecyclerView: RecyclerView
 
@@ -43,6 +46,23 @@ class NewCards : Fragment() {
         newCardsRecyclerView.setHasFixedSize(true)
         newCardAdapter = NewCardAdapter(view.context, newCards)
         newCardsRecyclerView.adapter = newCardAdapter
+
+        lifecycleScope.launch{
+            (requireActivity().application as YugiohApplication).newcarddb.newCardDao().getAll().collect{ databaseList ->
+                databaseList.map {entity ->
+                    DisplayNewCard(
+                        entity.name,
+                        entity.setName,
+                        entity.setRarity,
+                        entity.imageUrl,
+                    )
+                }.also{mappedList ->
+                    newCards.clear()
+                    newCards.addAll(mappedList)
+                    newCardAdapter.notifyDataSetChanged()
+                }
+            }
+        }
         return view
     }
 
@@ -85,7 +105,19 @@ class NewCards : Fragment() {
                         json.jsonObject.toString()
                     )
                     parsedJson.data?.let{list ->
-                        newCards.addAll(list)
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            (requireActivity().application as YugiohApplication).newcarddb.newCardDao()
+                                .deleteAll()
+                            (requireActivity().application as YugiohApplication).newcarddb.newCardDao()
+                                .insertAll(list.map {
+                                    NewCardEntity(
+                                        name = it.name,
+                                        setName = it.setName,
+                                        setRarity = it.setRarity,
+                                        imageUrl = it.imageUrl,
+                                    )
+                                })
+                        }
                     }
                     newCardAdapter.notifyDataSetChanged()
                 } catch(e: JSONException){

@@ -1,6 +1,7 @@
 package com.example.yu_gi_ohcardtracker
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class NewCardAdapter(private val context: Context, private val newCards: List<NewCard>) :
+class NewCardAdapter(private val context: Context, private val newCards: List<DisplayNewCard>) :
     RecyclerView.Adapter<NewCardAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,7 +37,7 @@ class NewCardAdapter(private val context: Context, private val newCards: List<Ne
             itemView.setOnClickListener(this)
         }
 
-        fun bind(newCard: NewCard){
+        fun bind(newCard: DisplayNewCard){
             newCardTextView.text = newCard.name
             setNameTextView.text = "Set: " + newCard.setName
             setRarityTextView.text = "Rarity: " + newCard.setRarity
@@ -45,7 +46,11 @@ class NewCardAdapter(private val context: Context, private val newCards: List<Ne
         }
 
         override fun onClick(v: View?){
-
+            val bannedCard = newCards[absoluteAdapterPosition]
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("CardName", bannedCard.name)
+            intent.putExtra("CardImage", bannedCard.imageUrl)
+            context.startActivity(intent)
         }
     }
 }

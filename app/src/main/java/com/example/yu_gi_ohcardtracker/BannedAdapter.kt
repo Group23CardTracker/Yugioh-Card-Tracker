@@ -1,6 +1,7 @@
 package com.example.yu_gi_ohcardtracker
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +49,11 @@ class BannedAdapter(private val context: Context, private val banned: List<Displ
         }
 
         override fun onClick(v: View?){
-            
+            val bannedCard = banned[absoluteAdapterPosition]
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("CardName", bannedCard.name)
+            intent.putExtra("CardImage", bannedCard.imageUrl)
+            context.startActivity(intent)
         }
     }
     }
