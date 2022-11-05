@@ -87,16 +87,18 @@
 - [x] **User can select an item from a list to view in greater detail**
 - [x] **User can switch between viewing different lists**
 - [ ] **User can favorite a card**
-- [ ] **User can view every card**
+- [x] **User can view every card**
 - [ ] **User can search for a specific card**
-- [ ] **User can view detailed information of the card**
-- [ ] **User can see pricing of the card**
+- [x] **User can view detailed information of the card**
+- [x] **User can see pricing of the card**
 - [ ] **User can maintain a personal digital collection on the app**
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
+Video walkthrough of banlist and new cards.
 <img src='https://i.imgur.com/LVBbjUV.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-
+Video walkthrough of home screen and card details.
+<img src='https://i.imgur.com/I0zSZuM.mp4' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
