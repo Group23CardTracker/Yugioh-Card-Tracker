@@ -46,6 +46,7 @@ class BanList : Fragment() {
         bannedCardAdapter = BannedAdapter(view.context, bannedCards)
         bannedCardRecyclerView.adapter = bannedCardAdapter
 
+        //get data from database
         lifecycleScope.launch{
             (requireActivity().application as YugiohApplication).bandb.bannedDao().getAll().collect{ databaseList ->
                 databaseList.map {entity ->

@@ -41,6 +41,7 @@ class BannedAdapter(private val context: Context, private val banned: List<Displ
             bannedCardTextView.text = bannedCard.name
             val bantext = bannedCard.banStatus
             bannedCardStatusTextView.text = bantext
+            //Change the text color for status
             if(bantext == "Banned") bannedCardStatusTextView.setTextColor(Color.RED)
             else if(bantext == "Limited") bannedCardStatusTextView.setTextColor(Color.parseColor("#FFA500"))
             else bannedCardStatusTextView.setTextColor(Color.YELLOW)

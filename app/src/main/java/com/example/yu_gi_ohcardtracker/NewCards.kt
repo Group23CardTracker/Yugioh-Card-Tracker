@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import okhttp3.Headers
 import org.json.JSONException
@@ -105,7 +105,7 @@ class NewCards : Fragment() {
                         json.jsonObject.toString()
                     )
                     parsedJson.data?.let{list ->
-                        lifecycleScope.launch(Dispatchers.IO) {
+                        lifecycleScope.launch(IO) {
                             (requireActivity().application as YugiohApplication).newcarddb.newCardDao()
                                 .deleteAll()
                             (requireActivity().application as YugiohApplication).newcarddb.newCardDao()
