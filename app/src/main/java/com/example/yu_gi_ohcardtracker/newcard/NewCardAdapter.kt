@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.yu_gi_ohcardtracker.DetailActivity
-import com.example.yu_gi_ohcardtracker.DisplayNewCard
 import com.example.yu_gi_ohcardtracker.R
 
 class NewCardAdapter(private val context: Context, private val newCards: List<DisplayNewCard>) :

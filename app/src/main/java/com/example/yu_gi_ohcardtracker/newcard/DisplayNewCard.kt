@@ -1,4 +1,4 @@
-package com.example.yu_gi_ohcardtracker
+package com.example.yu_gi_ohcardtracker.newcard
 
 data class DisplayNewCard(
     val name: String?,

@@ -9,5 +9,7 @@ data class BannedEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "banStatus") val banStatus: String?,
-    @ColumnInfo(name = "imageUrl") val imageUrl: String?
+    @ColumnInfo(name = "imageUrl") val imageUrl: String?,
+    @ColumnInfo(name = "setName") val setName: String?,
+    @ColumnInfo(name = "setRarity") val setRarity: String?,
 )

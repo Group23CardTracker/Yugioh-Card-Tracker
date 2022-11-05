@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
-import com.example.yu_gi_ohcardtracker.DisplayNewCard
 import com.example.yu_gi_ohcardtracker.R
 import com.example.yu_gi_ohcardtracker.YugiohApplication
 import com.example.yu_gi_ohcardtracker.createJson

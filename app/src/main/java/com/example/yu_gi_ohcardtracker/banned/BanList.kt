@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
-import com.example.yu_gi_ohcardtracker.DisplayBanned
 import com.example.yu_gi_ohcardtracker.R
 import com.example.yu_gi_ohcardtracker.YugiohApplication
 import com.example.yu_gi_ohcardtracker.createJson
@@ -57,7 +56,9 @@ class BanList : Fragment() {
                     DisplayBanned(
                         entity.name,
                         entity.banStatus,
-                        entity.imageUrl
+                        entity.imageUrl,
+                        entity.setName,
+                        entity.setRarity
                     )
                 }.also{mappedList ->
                     bannedCards.clear()
@@ -101,7 +102,9 @@ class BanList : Fragment() {
                                     BannedEntity(
                                         name = it.name,
                                         banStatus = it.banlistInfo?.banStatus,
-                                        imageUrl = it.imageUrl
+                                        imageUrl = it.imageUrl,
+                                        setName = it.setName,
+                                        setRarity = it.setRarity
                                     )
                                 })
                         }
