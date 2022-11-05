@@ -1,34 +1,37 @@
-package com.example.yu_gi_ohcardtracker
+package com.example.yu_gi_ohcardtracker.banned
 
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import com.example.yu_gi_ohcardtracker.DisplayBanned
+import com.example.yu_gi_ohcardtracker.R
+import com.example.yu_gi_ohcardtracker.YugiohApplication
+import com.example.yu_gi_ohcardtracker.createJson
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import okhttp3.Headers
 import org.json.JSONException
-import java.text.SimpleDateFormat
-import java.util.*
 
-private const val TAG = "NewCardFragment"
+private const val TAG = "BannedListFragment"
 
-class NewCards : Fragment() {
+class BanList : Fragment() {
 
-    private val newCards = mutableListOf<DisplayNewCard>()
-    private lateinit var newCardAdapter: NewCardAdapter
-    private lateinit var newCardsRecyclerView: RecyclerView
+    private val bannedCards = mutableListOf<DisplayBanned>()
+    private lateinit var bannedCardRecyclerView: RecyclerView
+    private lateinit var bannedCardAdapter: BannedAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -36,30 +39,30 @@ class NewCards : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_new_cards, container, false)
-
-        newCardsRecyclerView = view.findViewById(R.id.newcard_recycler_view)
-        newCardsRecyclerView.layoutManager = LinearLayoutManager(context).also{
+        val view = inflater.inflate(R.layout.fragment_ban_list, container, false)
+        
+        bannedCardRecyclerView = view.findViewById(R.id.banlist_recycler_view)
+        bannedCardRecyclerView.layoutManager = LinearLayoutManager(context).also{
             val dividerItemDecoration = DividerItemDecoration(context, it.orientation)
-            newCardsRecyclerView.addItemDecoration(dividerItemDecoration)
+            bannedCardRecyclerView.addItemDecoration(dividerItemDecoration)
         }
-        newCardsRecyclerView.setHasFixedSize(true)
-        newCardAdapter = NewCardAdapter(view.context, newCards)
-        newCardsRecyclerView.adapter = newCardAdapter
+        bannedCardRecyclerView.setHasFixedSize(true)
+        bannedCardAdapter = BannedAdapter(view.context, bannedCards)
+        bannedCardRecyclerView.adapter = bannedCardAdapter
 
+        //get data from database
         lifecycleScope.launch{
-            (requireActivity().application as YugiohApplication).newcarddb.newCardDao().getAll().collect{ databaseList ->
+            (requireActivity().application as YugiohApplication).bandb.bannedDao().getAll().collect{ databaseList ->
                 databaseList.map {entity ->
-                    DisplayNewCard(
+                    DisplayBanned(
                         entity.name,
-                        entity.setName,
-                        entity.setRarity,
-                        entity.imageUrl,
+                        entity.banStatus,
+                        entity.imageUrl
                     )
                 }.also{mappedList ->
-                    newCards.clear()
-                    newCards.addAll(mappedList)
-                    newCardAdapter.notifyDataSetChanged()
+                    bannedCards.clear()
+                    bannedCards.addAll(mappedList)
+                    bannedCardAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -68,27 +71,12 @@ class NewCards : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         fetchCards()
     }
 
-    companion object {
-        fun newInstance(): NewCards{
-            return NewCards()
-        }
-    }
-
     private fun fetchCards(){
-        val c = Calendar.getInstance()
-        var d = c.time
-        val df = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-        val endDate = df.format(d)
-        c.add(Calendar.DATE, -60)
-        d = c.time
-        val startDate = df.format(d)
-        println("https://db.ygoprodeck.com/api/v7/cardinfo.php?&startdate=$startDate&enddate=$endDate&dataregion=tcg_date")
         val client = AsyncHttpClient()
-        client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?&startdate=$startDate&enddate=$endDate&dataregion=tcg_date", object : JsonHttpResponseHandler(){
+        client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?banlist=tcg", object : JsonHttpResponseHandler(){
             override fun onFailure(
                 statusCode: Int,
                 headers: Headers?,
@@ -101,29 +89,34 @@ class NewCards : Fragment() {
                 Log.i(TAG, "Successfully fetched Cards: $json")
                 try{
                     val parsedJson = createJson().decodeFromString(
-                        SearchNewCardData.serializer(),
+                        SearchNewData.serializer(),
                         json.jsonObject.toString()
                     )
                     parsedJson.data?.let{list ->
                         lifecycleScope.launch(IO) {
-                            (requireActivity().application as YugiohApplication).newcarddb.newCardDao()
+                            (requireActivity().application as YugiohApplication).bandb.bannedDao()
                                 .deleteAll()
-                            (requireActivity().application as YugiohApplication).newcarddb.newCardDao()
+                            (requireActivity().application as YugiohApplication).bandb.bannedDao()
                                 .insertAll(list.map {
-                                    NewCardEntity(
+                                    BannedEntity(
                                         name = it.name,
-                                        setName = it.setName,
-                                        setRarity = it.setRarity,
-                                        imageUrl = it.imageUrl,
+                                        banStatus = it.banlistInfo?.banStatus,
+                                        imageUrl = it.imageUrl
                                     )
                                 })
                         }
                     }
-                    newCardAdapter.notifyDataSetChanged()
+                    bannedCardAdapter.notifyDataSetChanged()
                 } catch(e: JSONException){
                     Log.e(TAG, "Exception: $e")
                 }
             }
         })
+    }
+
+    companion object {
+        fun newInstance(): BanList {
+            return BanList()
+        }
     }
 }

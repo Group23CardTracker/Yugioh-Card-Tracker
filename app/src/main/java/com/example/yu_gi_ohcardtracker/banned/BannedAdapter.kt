@@ -1,4 +1,4 @@
-package com.example.yu_gi_ohcardtracker
+package com.example.yu_gi_ohcardtracker.banned
 
 import android.content.Context
 import android.content.Intent
@@ -10,6 +10,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.yu_gi_ohcardtracker.DetailActivity
+import com.example.yu_gi_ohcardtracker.DisplayBanned
+import com.example.yu_gi_ohcardtracker.R
 
 class BannedAdapter(private val context: Context, private val banned: List<DisplayBanned>) :
     RecyclerView.Adapter<BannedAdapter.ViewHolder>(){

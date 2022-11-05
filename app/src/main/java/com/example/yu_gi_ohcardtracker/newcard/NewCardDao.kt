@@ -1,4 +1,4 @@
-package com.example.yu_gi_ohcardtracker
+package com.example.yu_gi_ohcardtracker.newcard
 
 import androidx.room.Dao
 import androidx.room.Insert

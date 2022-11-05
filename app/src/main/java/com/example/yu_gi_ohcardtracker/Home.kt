@@ -65,7 +65,7 @@ class Home : Fragment(), HomeInteractionListener {
 //        }
 // DAO
 //        lifecycleScope.launch {
-//            (activity?.application as MyApplication).db.cardDao().getAll().collect { databaseList ->
+//            (activity?.application as YugiohApplication).db.cardDao().getAll().collect { databaseList ->
 //                databaseList.map { entity ->
 //                    Card(
 //                        entity.name,

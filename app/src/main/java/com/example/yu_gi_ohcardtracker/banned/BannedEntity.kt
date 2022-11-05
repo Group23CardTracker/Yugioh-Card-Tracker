@@ -1,4 +1,4 @@
-package com.example.yu_gi_ohcardtracker
+package com.example.yu_gi_ohcardtracker.banned
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
