@@ -19,6 +19,8 @@
         <!-- Detail Activity -->
         <activity android:name=".DetailActivity"
             android:exported="true" />
+        <activity android:name=".CardDetailActivity"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
