@@ -11,7 +11,6 @@ import kotlinx.serialization.Serializable
 data class Card (
     @SerializedName("name")
     val name: String? = null,
-    @SerializedName("image_url")
-    val img: String? = null,
+    @SerializedName("card_images")
+    val images: List<CardImages>? = null,
 ) : java.io.Serializable
-

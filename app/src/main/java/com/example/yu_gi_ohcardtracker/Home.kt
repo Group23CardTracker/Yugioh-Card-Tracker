@@ -112,6 +112,7 @@ class Home : Fragment(), HomeInteractionListener {
                         val models : List<Card> = gson.fromJson(resultsJSON.toString(), arrayCardType)
                         recyclerView.adapter = ItemAdapter(models, this@Home)
 
+
                         // Look for this in Logcat:
                         Log.d("Response", resultsJSON.toString())
                         Log.d("Response", "response successful")
