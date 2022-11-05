@@ -146,7 +146,7 @@ class Home : Fragment(), HomeInteractionListener {
 
         Toast.makeText(context, "test: " + item.name, Toast.LENGTH_SHORT).show()
         val cardDetailIntent = Intent(context, CardDetailActivity::class.java)
-        cardDetailIntent.putExtra("theCard", name)
+        cardDetailIntent.putExtra("theCard", item)
         context?.startActivity(cardDetailIntent)
     }
 
