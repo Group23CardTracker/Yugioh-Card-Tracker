@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -40,7 +41,6 @@ class NewCards : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_new_cards, container, false)
-
         newCardsRecyclerView = view.findViewById(R.id.newcard_recycler_view)
         newCardsRecyclerView.layoutManager = LinearLayoutManager(context).also{
             val dividerItemDecoration = DividerItemDecoration(context, it.orientation)
@@ -72,7 +72,9 @@ class NewCards : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fetchCards()
+        val progressBar = view.findViewById<View>(R.id.progress) as ContentLoadingProgressBar
+
+        fetchCards(progressBar)
     }
 
     companion object {
@@ -81,7 +83,9 @@ class NewCards : Fragment() {
         }
     }
 
-    private fun fetchCards(){
+    private fun fetchCards(progressBar: ContentLoadingProgressBar){
+        progressBar.show()
+
         val c = Calendar.getInstance()
         var d = c.time
         val df = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
@@ -98,10 +102,13 @@ class NewCards : Fragment() {
                 response: String?,
                 throwable: Throwable?
             ) {
+                // The wait for a response is over
+                progressBar.hide()
                 Log.e(TAG, "Failed to fetch Cards: $statusCode")
             }
             override fun onSuccess(statusCode: Int, headers: Headers, json: JSON){
                 Log.i(TAG, "Successfully fetched Cards: $json")
+                progressBar.hide()
                 try{
                     val parsedJson = createJson().decodeFromString(
                         SearchNewCardData.serializer(),

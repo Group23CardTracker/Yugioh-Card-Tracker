@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -72,10 +73,13 @@ class BanList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fetchCards()
+        val progressBar = view.findViewById<View>(R.id.progress) as ContentLoadingProgressBar
+
+        fetchCards(progressBar)
     }
 
-    private fun fetchCards(){
+    private fun fetchCards(progressBar: ContentLoadingProgressBar){
+        progressBar.show()
         val client = AsyncHttpClient()
         client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?banlist=tcg", object : JsonHttpResponseHandler(){
             override fun onFailure(
@@ -84,10 +88,12 @@ class BanList : Fragment() {
                 response: String?,
                 throwable: Throwable?
             ) {
+                progressBar.hide()
                 Log.e(TAG, "Failed to fetch Cards: $statusCode")
             }
             override fun onSuccess(statusCode: Int, headers: Headers, json: JSON){
                 Log.i(TAG, "Successfully fetched Cards: $json")
+                progressBar.hide()
                 try{
                     val parsedJson = createJson().decodeFromString(
                         SearchNewData.serializer(),
