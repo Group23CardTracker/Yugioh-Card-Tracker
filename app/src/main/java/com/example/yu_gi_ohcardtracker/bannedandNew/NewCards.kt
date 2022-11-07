@@ -1,4 +1,4 @@
-package com.example.yu_gi_ohcardtracker.newcard
+package com.example.yu_gi_ohcardtracker.bannedandNew
 
 import android.os.Bundle
 import android.util.Log
@@ -27,7 +27,7 @@ private const val TAG = "NewCardFragment"
 
 class NewCards : Fragment() {
 
-    private val newCards = mutableListOf<DisplayNewCard>()
+    private val newCards = mutableListOf<DisplaySCard>()
     private lateinit var newCardAdapter: NewCardAdapter
     private lateinit var newCardsRecyclerView: RecyclerView
 
@@ -53,11 +53,12 @@ class NewCards : Fragment() {
         lifecycleScope.launch{
             (requireActivity().application as YugiohApplication).newcarddb.newCardDao().getAll().collect{ databaseList ->
                 databaseList.map {entity ->
-                    DisplayNewCard(
+                    DisplaySCard(
                         entity.name,
-                        entity.setName,
-                        entity.setRarity,
+                        null,
                         entity.imageUrl,
+                        entity.setName,
+                        entity.setRarity
                     )
                 }.also{mappedList ->
                     newCards.clear()
@@ -111,7 +112,7 @@ class NewCards : Fragment() {
                 progressBar.hide()
                 try{
                     val parsedJson = createJson().decodeFromString(
-                        SearchNewCardData.serializer(),
+                        SearchNewData.serializer(),
                         json.jsonObject.toString()
                     )
                     parsedJson.data?.let{list ->
@@ -122,9 +123,9 @@ class NewCards : Fragment() {
                                 .insertAll(list.map {
                                     NewCardEntity(
                                         name = it.name,
-                                        setName = it.setName,
-                                        setRarity = it.setRarity,
                                         imageUrl = it.imageUrl,
+                                        setName = it.setName,
+                                        setRarity = it.setRarity
                                     )
                                 })
                         }

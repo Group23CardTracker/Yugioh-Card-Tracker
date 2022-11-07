@@ -1,4 +1,4 @@
-package com.example.yu_gi_ohcardtracker.newcard
+package com.example.yu_gi_ohcardtracker.bannedandNew
 
 import android.support.annotation.Keep
 import kotlinx.serialization.SerialName
@@ -6,18 +6,20 @@ import kotlinx.serialization.Serializable
 
 @Keep
 @Serializable
-data class SearchNewCardData(
+data class SearchNewData(
     @SerialName("data")
-    val data: List<NewCard>?
+    val data: List<BannedCard>?
 )
 
 @Keep
 @Serializable
-data class NewCard(
+data class BannedCard(
     @SerialName("name")
     val name: String?,
     @SerialName("card_images")
-    val images: List<NewImages>?,
+    val images: List<Images>?,
+    @SerialName("banlist_info")
+    val banlistInfo: BanStatus? = null,
     @SerialName("card_sets")
     val sets: List<Sets>?
 ) : java.io.Serializable{
@@ -35,10 +37,16 @@ data class Sets(
     val set_rarity: String?
 ) : java.io.Serializable
 
+@Keep
+@Serializable
+data class BanStatus(
+    @SerialName("ban_tcg")
+    val banStatus: String? = null
+) : java.io.Serializable
 
 @Keep
 @Serializable
-data class NewImages(
+data class Images(
     @SerialName("image_url")
     val url: String?
 ) : java.io.Serializable

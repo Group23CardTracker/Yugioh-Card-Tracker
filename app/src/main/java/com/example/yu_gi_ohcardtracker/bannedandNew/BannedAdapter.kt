@@ -1,4 +1,4 @@
-package com.example.yu_gi_ohcardtracker.banned
+package com.example.yu_gi_ohcardtracker.bannedandNew
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.yu_gi_ohcardtracker.DetailActivity
 import com.example.yu_gi_ohcardtracker.R
 
-class BannedAdapter(private val context: Context, private val banned: List<DisplayBanned>) :
+class BannedAdapter(private val context: Context, private val banned: List<DisplaySCard>) :
     RecyclerView.Adapter<BannedAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,7 +39,7 @@ class BannedAdapter(private val context: Context, private val banned: List<Displ
             itemView.setOnClickListener(this)
         }
 
-        fun bind(bannedCard: DisplayBanned){
+        fun bind(bannedCard: DisplaySCard){
             bannedCardTextView.text = bannedCard.name
             val bantext = bannedCard.banStatus
             bannedCardStatusTextView.text = bantext

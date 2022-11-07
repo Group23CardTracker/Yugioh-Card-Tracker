@@ -1,6 +1,6 @@
-package com.example.yu_gi_ohcardtracker.banned
+package com.example.yu_gi_ohcardtracker.bannedandNew
 
-data class DisplayBanned(
+data class DisplaySCard(
     val name: String?,
     val banStatus: String?,
     val imageUrl: String?,

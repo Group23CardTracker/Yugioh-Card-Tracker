@@ -1,8 +1,8 @@
 package com.example.yu_gi_ohcardtracker
 
 import android.app.Application
-import com.example.yu_gi_ohcardtracker.banned.BannedAppDatabase
-import com.example.yu_gi_ohcardtracker.newcard.NewCardAppDatabase
+import com.example.yu_gi_ohcardtracker.bannedandNew.BannedAppDatabase
+import com.example.yu_gi_ohcardtracker.bannedandNew.NewCardAppDatabase
 
 class YugiohApplication: Application(){
     val bandb by lazy { BannedAppDatabase.getInstance(this)}

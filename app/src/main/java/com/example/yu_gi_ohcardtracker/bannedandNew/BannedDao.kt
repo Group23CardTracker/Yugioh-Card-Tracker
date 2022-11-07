@@ -1,4 +1,4 @@
-package com.example.yu_gi_ohcardtracker.banned
+package com.example.yu_gi_ohcardtracker.bannedandNew
 
 import androidx.room.Dao
 import androidx.room.Insert

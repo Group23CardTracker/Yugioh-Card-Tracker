@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.example.yu_gi_ohcardtracker.banned.BanList
+import com.example.yu_gi_ohcardtracker.bannedandNew.BanList
+import com.example.yu_gi_ohcardtracker.bannedandNew.NewCards
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.serialization.json.Json
 import com.example.yu_gi_ohcardtracker.databinding.ActivityMainBinding
-import com.example.yu_gi_ohcardtracker.newcard.NewCards
 
 fun createJson() = Json {
     isLenient = true

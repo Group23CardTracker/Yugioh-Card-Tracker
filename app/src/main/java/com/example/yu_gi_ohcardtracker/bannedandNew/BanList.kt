@@ -1,4 +1,4 @@
-package com.example.yu_gi_ohcardtracker.banned
+package com.example.yu_gi_ohcardtracker.bannedandNew
 
 import android.os.Bundle
 import android.util.Log
@@ -25,7 +25,7 @@ private const val TAG = "BannedListFragment"
 
 class BanList : Fragment() {
 
-    private val bannedCards = mutableListOf<DisplayBanned>()
+    private val bannedCards = mutableListOf<DisplaySCard>()
     private lateinit var bannedCardRecyclerView: RecyclerView
     private lateinit var bannedCardAdapter: BannedAdapter
 
@@ -54,7 +54,7 @@ class BanList : Fragment() {
         lifecycleScope.launch{
             (requireActivity().application as YugiohApplication).bandb.bannedDao().getAll().collect{ databaseList ->
                 databaseList.map {entity ->
-                    DisplayBanned(
+                    DisplaySCard(
                         entity.name,
                         entity.banStatus,
                         entity.imageUrl,
