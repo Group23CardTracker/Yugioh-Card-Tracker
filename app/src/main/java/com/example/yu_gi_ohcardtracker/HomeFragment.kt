@@ -6,30 +6,22 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.core.widget.ContentLoadingProgressBar
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.launch
 import okhttp3.Headers
 import org.json.JSONArray
 
-import android.view.Menu
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import kotlinx.serialization.descriptors.PrimitiveKind
 import java.util.*
 
 
 
-class Home : Fragment(), HomeInteractionListener {
+class HomeFragment : Fragment(), HomeInteractionListener {
 
     private val cards = mutableListOf<Card>()
     private lateinit var itemsRecyclerView: RecyclerView
@@ -83,8 +75,8 @@ class Home : Fragment(), HomeInteractionListener {
     }
 
     companion object {
-        fun newInstance(): Home {
-            return Home()
+        fun newInstance(): HomeFragment {
+            return HomeFragment()
         }
     }
 
@@ -110,7 +102,7 @@ class Home : Fragment(), HomeInteractionListener {
                         val arrayCardType = object : TypeToken<List<Card>>() {}.type
 
                         val models : List<Card> = gson.fromJson(resultsJSON.toString(), arrayCardType)
-                        recyclerView.adapter = ItemAdapter(models, this@Home)
+                        recyclerView.adapter = ItemAdapter(models, this@HomeFragment)
 
 
                         // Look for this in Logcat:

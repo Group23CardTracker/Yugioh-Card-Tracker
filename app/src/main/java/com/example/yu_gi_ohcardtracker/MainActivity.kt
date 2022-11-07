@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         val fragmentManager: FragmentManager = supportFragmentManager
 
         // define your fragments here
-        val fragment1: Fragment = Home()
+        val fragment1: Fragment = HomeFragment()
         val fragment2: Fragment = BanList()
         val fragment3: Fragment = NewCards()
 
