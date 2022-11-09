@@ -33,6 +33,24 @@ class ItemAdapter(private val items: List<Card>,
         }
     }
 
+    // creating a variable for array list and context.
+    private var cardModelArrayList: ArrayList<Card>? = null
+
+    // creating a constructor for our variables.
+    fun CardAdapter(theCards: ArrayList<Card>, context: Context?) {
+        this.cardModelArrayList = theCards
+    }
+
+    // method for filtering our recyclerview items.
+    fun filterList(filterlist: ArrayList<Card>) {
+        // below line is to add our filtered
+        // list in our card array list.
+        cardModelArrayList = filterlist
+        // below line is to notify our adapter
+        // as change in recycler view data.
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
         return items.size
     }

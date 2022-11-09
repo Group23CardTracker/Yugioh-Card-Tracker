@@ -17,18 +17,22 @@ import okhttp3.Headers
 import org.json.JSONArray
 
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
 import java.util.*
 
+import kotlin.collections.ArrayList
 
 
-class HomeFragment : Fragment(), HomeInteractionListener {
+class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractionListener {
 
-    private val cards = mutableListOf<Card>()
+    private val cards = arrayListOf<Card>()
     private lateinit var itemsRecyclerView: RecyclerView
-
+    private var cards2 = arrayListOf<Card>()
+    private lateinit var rec : RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -42,14 +46,12 @@ class HomeFragment : Fragment(), HomeInteractionListener {
         val context = view.context
         recyclerView.layoutManager = GridLayoutManager(context, 1)
 
+        rec = recyclerView
         updateAdapter(progressBar, recyclerView)
 
+        //val itemAdapter = ItemAdapter(cards, this@Home)
 
-
-
-
-//        val itemAdapter = ItemAdapter(cards, context)
-//        itemsRecyclerView.adapter = itemAdapter
+        //itemsRecyclerView.adapter = itemAdapter
 //
 //        itemsRecyclerView.layoutManager = LinearLayoutManager(context).also {
 //            val dividerItemDecoration = DividerItemDecoration(context, it.orientation)
@@ -57,7 +59,7 @@ class HomeFragment : Fragment(), HomeInteractionListener {
 //        }
 // DAO
 //        lifecycleScope.launch {
-//            (activity?.application as YugiohApplication).db.cardDao().getAll().collect { databaseList ->
+//            (activity?.application as MyApplication).db.cardDao().getAll().collect { databaseList ->
 //                databaseList.map { entity ->
 //                    Card(
 //                        entity.name,
@@ -75,10 +77,9 @@ class HomeFragment : Fragment(), HomeInteractionListener {
     }
 
     companion object {
-        fun newInstance(): HomeFragment {
-            return HomeFragment()
-        }
+
     }
+
 
     private fun updateAdapter(progressBar: ContentLoadingProgressBar, recyclerView: RecyclerView) {
         progressBar.show()
@@ -103,7 +104,7 @@ class HomeFragment : Fragment(), HomeInteractionListener {
 
                         val models : List<Card> = gson.fromJson(resultsJSON.toString(), arrayCardType)
                         recyclerView.adapter = ItemAdapter(models, this@HomeFragment)
-
+                        cards2 = models as ArrayList<Card>
 
                         // Look for this in Logcat:
                         Log.d("Response", resultsJSON.toString())
@@ -142,48 +143,51 @@ class HomeFragment : Fragment(), HomeInteractionListener {
         context?.startActivity(cardDetailIntent)
     }
 
-    // calling on create option menu
-    // layout to inflate our menu file.
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        // below line is to get our inflater
-//
-//        // inside inflater we are inflating our menu file.
-//        inflater.inflate(R.menu.search_menu, menu)
-//
-//        // below line is to get our menu item.
-//        val searchItem = menu.findItem(R.id.actionSearch)
-//
-//        // getting search view of our item.
-//        val searchView = searchItem.actionView
-//
-//        // below line is to call set on query text listener method.
-//
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String): Boolean {
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(newText: String): Boolean {
-//                // inside on query text change method we are
-//                // calling a method to filter our recycler view.
-//                filter(newText)
-//                return false
-//            }
-//        })
-//        return true
-//    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Inflate menu with items using MenuInflator
+        //val inflater = menuInflater
+        inflater.inflate(R.menu.search_menu, menu)
+        // Initialise menu item search bar
+        // with id and take its object
+        val searchViewItem = menu.findItem(R.id.actionSearch)
+        val searchView = MenuItemCompat.getActionView(searchViewItem) as SearchView
+
+        // attach setOnQueryTextListener
+        // to search view defined above
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            // Override onQueryTextSubmit method which is call when submit query is searched
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // If the list contains the search query than filter the adapter
+                // using the filter method with the query as its argument
+                //filter(query)
+
+                return false
+            }
+
+            // This method is overridden to filter the adapter according
+            // to a search query when the user is typing search
+            override fun onQueryTextChange(newText: String): Boolean {
+
+                filter(newText)
+                return false
+            }
+        })
+        return
+    }
+
+
 
     private fun filter(text: String) {
         // creating a new array list to filter our data.
         val filteredlist = ArrayList<Card>()
-
-        // running a for loop to compare elements.
-        for (item in cards) {
+        // running a for loop to compare elements
+        cards2.forEach{
             // checking if the entered string matched with any item of our recycler view.
-            if (item.name?.lowercase()?.contains(text.lowercase(Locale.getDefault())) == true) {
+            if (it.name?.lowercase()?.contains(text.lowercase(Locale.getDefault())) == true) {
                 // if the item is matched we are
                 // adding it to our filtered list.
-                filteredlist.add(item)
+                filteredlist.add(it)
             }
         }
         if (filteredlist.isEmpty()) {
@@ -193,7 +197,7 @@ class HomeFragment : Fragment(), HomeInteractionListener {
         } else {
             // at last we are passing that filtered
             // list to our adapter class.
-//            ItemAdapter.filterList(filteredlist)
+            rec.adapter = ItemAdapter(filteredlist, this@HomeFragment)
         }
     }
 }
