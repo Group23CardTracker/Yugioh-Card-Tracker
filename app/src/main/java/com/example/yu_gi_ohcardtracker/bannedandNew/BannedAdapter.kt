@@ -56,6 +56,8 @@ class BannedAdapter(private val context: Context, private val banned: List<Displ
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra("CardName", bannedCard.name)
             intent.putExtra("CardImage", bannedCard.imageUrl)
+            // For the search
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         }
     }

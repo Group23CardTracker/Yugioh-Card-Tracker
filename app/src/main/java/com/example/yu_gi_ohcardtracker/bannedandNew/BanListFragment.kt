@@ -2,10 +2,11 @@ package com.example.yu_gi_ohcardtracker.bannedandNew
 
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,24 +14,28 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
-import com.example.yu_gi_ohcardtracker.R
-import com.example.yu_gi_ohcardtracker.YugiohApplication
-import com.example.yu_gi_ohcardtracker.createJson
+import com.example.yu_gi_ohcardtracker.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import okhttp3.Headers
 import org.json.JSONException
+import java.util.*
 
 private const val TAG = "BannedListFragment"
 
-class BanList : Fragment() {
+class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListener {
 
     private val bannedCards = mutableListOf<DisplaySCard>()
     private lateinit var bannedCardRecyclerView: RecyclerView
     private lateinit var bannedCardAdapter: BannedAdapter
 
+    // For the search
+    private var cards2 = arrayListOf<DisplaySCard>()
+    private lateinit var rec : RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
 
     }
 
@@ -50,6 +55,10 @@ class BanList : Fragment() {
         bannedCardAdapter = BannedAdapter(view.context, bannedCards)
         bannedCardRecyclerView.adapter = bannedCardAdapter
 
+
+        // Set the rec for search to newcards
+        rec = bannedCardRecyclerView
+
         //get data from database
         lifecycleScope.launch{
             (requireActivity().application as YugiohApplication).bandb.bannedDao().getAll().collect{ databaseList ->
@@ -64,6 +73,8 @@ class BanList : Fragment() {
                 }.also{mappedList ->
                     bannedCards.clear()
                     bannedCards.addAll(mappedList)
+                    // for the search
+                    cards2 = mappedList as ArrayList<DisplaySCard>
                     bannedCardAdapter.notifyDataSetChanged()
                 }
             }
@@ -127,8 +138,70 @@ class BanList : Fragment() {
     }
 
     companion object {
-        fun newInstance(): BanList {
-            return BanList()
+//        fun newInstance(): BanList {
+//            return BanList()
+//        }
+    }
+
+    // For the search
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Inflate menu with items using MenuInflator
+        //val inflater = menuInflater
+        inflater.inflate(R.menu.search_menu, menu)
+        // Initialise menu item search bar
+        // with id and take its object
+        val searchViewItem = menu.findItem(R.id.actionSearch)
+        val searchView = MenuItemCompat.getActionView(searchViewItem) as SearchView
+
+        // attach setOnQueryTextListener
+        // to search view defined above
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            // Override onQueryTextSubmit method which is call when submit query is searched
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // If the list contains the search query than filter the adapter
+                // using the filter method with the query as its argument
+                //filter(query)
+
+                return false
+            }
+
+            // This method is overridden to filter the adapter according
+            // to a search query when the user is typing search
+            override fun onQueryTextChange(newText: String): Boolean {
+
+                filter(newText)
+                return false
+            }
+        })
+        return
+    }
+
+    private fun filter(text: String) {
+        // creating a new array list to filter our data.
+        val filteredlist = ArrayList<DisplaySCard>()
+        // running a for loop to compare elements
+        cards2.forEach{
+            // checking if the entered string matched with any item of our recycler view.
+            if (it.name?.lowercase()?.contains(text.lowercase(Locale.getDefault())) == true) {
+                // if the item is matched we are
+                // adding it to our filtered list.
+                filteredlist.add(it)
+            }
+        }
+        if (filteredlist.isEmpty()) {
+            // if no item is added in filtered list we are
+            // displaying a toast message as no data found.
+            //Toast.makeText(context, "No Data Found..", Toast.LENGTH_SHORT).show()
+        } else {
+            // at last we are passing that filtered
+            // list to our adapter class.
+            rec.adapter = context?.let { BannedAdapter(it.applicationContext, filteredlist) }
         }
     }
+
+    override fun onItemClick(item: Card) {
+        TODO("Not yet implemented")
+    }
+
+
 }

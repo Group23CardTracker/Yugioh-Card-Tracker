@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity() {
 
         // define your fragments here
         val fragment1: Fragment = HomeFragment(menuInflater)
-        val fragment2: Fragment = BanList()
-        val fragment3: Fragment = NewCards()
+        val fragment2: Fragment = BanList(menuInflater)
+        val fragment3: Fragment = NewCards(menuInflater)
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
 

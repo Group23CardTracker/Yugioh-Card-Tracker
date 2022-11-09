@@ -2,9 +2,10 @@ package com.example.yu_gi_ohcardtracker.bannedandNew
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -13,9 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
-import com.example.yu_gi_ohcardtracker.R
-import com.example.yu_gi_ohcardtracker.YugiohApplication
-import com.example.yu_gi_ohcardtracker.createJson
+import com.example.yu_gi_ohcardtracker.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import okhttp3.Headers
@@ -25,14 +24,19 @@ import java.util.*
 
 private const val TAG = "NewCardFragment"
 
-class NewCards : Fragment() {
+class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionListener {
 
     private val newCards = mutableListOf<DisplaySCard>()
     private lateinit var newCardAdapter: NewCardAdapter
     private lateinit var newCardsRecyclerView: RecyclerView
 
+    // For the search
+    private var cards2 = arrayListOf<DisplaySCard>()
+    private lateinit var rec : RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -50,6 +54,9 @@ class NewCards : Fragment() {
         newCardAdapter = NewCardAdapter(view.context, newCards)
         newCardsRecyclerView.adapter = newCardAdapter
 
+        // Set the rec for search to newcards
+        rec = newCardsRecyclerView
+
         lifecycleScope.launch{
             (requireActivity().application as YugiohApplication).newcarddb.newCardDao().getAll().collect{ databaseList ->
                 databaseList.map {entity ->
@@ -63,6 +70,7 @@ class NewCards : Fragment() {
                 }.also{mappedList ->
                     newCards.clear()
                     newCards.addAll(mappedList)
+                    cards2 = mappedList as ArrayList<DisplaySCard>
                     newCardAdapter.notifyDataSetChanged()
                 }
             }
@@ -79,9 +87,9 @@ class NewCards : Fragment() {
     }
 
     companion object {
-        fun newInstance(): NewCards {
-            return NewCards()
-        }
+//        fun newInstance(): NewCards {
+//            return NewCards()
+//        }
     }
 
     private fun fetchCards(progressBar: ContentLoadingProgressBar){
@@ -140,4 +148,68 @@ class NewCards : Fragment() {
             }
         })
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Inflate menu with items using MenuInflator
+        //val inflater = menuInflater
+        inflater.inflate(R.menu.search_menu, menu)
+        // Initialise menu item search bar
+        // with id and take its object
+        val searchViewItem = menu.findItem(R.id.actionSearch)
+        val searchView = MenuItemCompat.getActionView(searchViewItem) as SearchView
+
+        // attach setOnQueryTextListener
+        // to search view defined above
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            // Override onQueryTextSubmit method which is call when submit query is searched
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // If the list contains the search query than filter the adapter
+                // using the filter method with the query as its argument
+                //filter(query)
+
+                return false
+            }
+
+            // This method is overridden to filter the adapter according
+            // to a search query when the user is typing search
+            override fun onQueryTextChange(newText: String): Boolean {
+
+                filter(newText)
+                return false
+            }
+        })
+        return
+    }
+
+
+
+    private fun filter(text: String) {
+        // creating a new array list to filter our data.
+        val filteredlist = ArrayList<DisplaySCard>()
+        // running a for loop to compare elements
+        cards2.forEach{
+            // checking if the entered string matched with any item of our recycler view.
+            if (it.name?.lowercase()?.contains(text.lowercase(Locale.getDefault())) == true) {
+                // if the item is matched we are
+                // adding it to our filtered list.
+                filteredlist.add(it)
+            }
+        }
+        if (filteredlist.isEmpty()) {
+            // if no item is added in filtered list we are
+            // displaying a toast message as no data found.
+            //Toast.makeText(context, "No Data Found..", Toast.LENGTH_SHORT).show()
+        } else {
+            // at last we are passing that filtered
+            // list to our adapter class.
+            rec.adapter = context?.let { NewCardAdapter(it.applicationContext, filteredlist) }
+        }
+    }
+
+    override fun onItemClick(item: Card) {
+        TODO("Not yet implemented")
+    }
+
+
 }

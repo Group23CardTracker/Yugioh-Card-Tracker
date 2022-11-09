@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.yu_gi_ohcardtracker.Card
 import com.example.yu_gi_ohcardtracker.DetailActivity
 import com.example.yu_gi_ohcardtracker.R
 
@@ -23,6 +24,24 @@ class NewCardAdapter(private val context: Context, private val newCards: List<Di
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val newCard = newCards[position]
         holder.bind(newCard)
+    }
+
+    // creating a variable for array list and context.
+    private var cardModelArrayList: ArrayList<DisplaySCard>? = null
+
+    // creating a constructor for our variables.
+    fun CardAdapter(theCards: ArrayList<DisplaySCard>, context: Context?) {
+        this.cardModelArrayList = theCards
+    }
+
+    // method for filtering our recyclerview items.
+    fun filterList(filterlist: ArrayList<DisplaySCard>) {
+        // below line is to add our filtered
+        // list in our card array list.
+        cardModelArrayList = filterlist
+        // below line is to notify our adapter
+        // as change in recycler view data.
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = newCards.size
@@ -52,6 +71,8 @@ class NewCardAdapter(private val context: Context, private val newCards: List<Di
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra("CardName", bannedCard.name)
             intent.putExtra("CardImage", bannedCard.imageUrl)
+            // For the search
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         }
     }
