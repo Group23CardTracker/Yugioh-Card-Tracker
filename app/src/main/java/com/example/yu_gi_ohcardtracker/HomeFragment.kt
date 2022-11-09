@@ -1,24 +1,27 @@
 package com.example.yu_gi_ohcardtracker
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.core.widget.ContentLoadingProgressBar
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import okhttp3.Headers
-import org.json.JSONArray
 
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+import org.json.JSONException
 import java.util.*
 
 import kotlin.collections.ArrayList
@@ -26,10 +29,14 @@ import kotlin.collections.ArrayList
 
 class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractionListener {
 
-    private val cards = arrayListOf<Card>()
-    private lateinit var itemsRecyclerView: RecyclerView
-    private var cards2 = arrayListOf<Card>()
+    private val cards = mutableListOf<DisplayCard>()
+    private lateinit var cardRecyclerView: RecyclerView
+    private lateinit var cardAdapter: ItemAdapter
+
+    private var cards2 = arrayListOf<DisplayCard>()
     private lateinit var rec : RecyclerView
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -42,12 +49,14 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val progressBar = view.findViewById<View>(R.id.progress) as ContentLoadingProgressBar
-        val recyclerView = view.findViewById<View>(R.id.itemsRv) as RecyclerView
+        cardRecyclerView = view.findViewById<View>(R.id.itemsRv) as RecyclerView
         val context = view.context
-        recyclerView.layoutManager = GridLayoutManager(context, 1)
-
-        rec = recyclerView
-        updateAdapter(progressBar, recyclerView)
+        cardRecyclerView.layoutManager = LinearLayoutManager(context).also{
+            val dividerItemDecoration = DividerItemDecoration(context, it.orientation)
+            cardRecyclerView.addItemDecoration(dividerItemDecoration)
+        }
+        rec = cardRecyclerView
+        updateAdapter(progressBar, context)
 
         //val itemAdapter = ItemAdapter(cards, this@Home)
 
@@ -81,7 +90,39 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
     }
 
 
-    private fun updateAdapter(progressBar: ContentLoadingProgressBar, recyclerView: RecyclerView) {
+    private fun updateAdapter(progressBar: ContentLoadingProgressBar, context: Context) {
+        cardAdapter = ItemAdapter(context,cards, this@HomeFragment)
+        cardRecyclerView.adapter = cardAdapter
+
+        lifecycleScope.launch{
+            (requireActivity().application as YugiohApplication).db.cardDao().getAll().collect{ databaseList ->
+                databaseList.map {entity ->
+                    DisplayCard(
+                        entity.name,
+                        entity.img,
+                        entity.smallImg,
+                        entity.desc,
+                        entity.level,
+                        entity.atk,
+                        entity.def,
+                        entity.cardmarket_price,
+                        entity.tcgPlayerPrice,
+                        entity.ebayPrice,
+                        entity.ebayPrice,
+                        entity.setName,
+                        entity.setRarity
+                    )
+                }.also{mappedList ->
+                    cards.clear()
+                    cards.addAll(mappedList)
+                    cards2 = mappedList as ArrayList<DisplayCard>
+                    cardAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+
+
+
         progressBar.show()
 
         // Create and set up an AsyncHTTPClient() here
@@ -97,18 +138,54 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
                         json: JsonHttpResponseHandler.JSON
                     ) {
                         progressBar.hide()
-                        val resultsJSON : JSONArray = json.jsonObject.getJSONArray("data")
+                        try{
+                            val parsedJson = createJson().decodeFromString(
+                                SearchData.serializer(),
+                                json.jsonObject.toString()
+                            )
+                            if(!isAdded){
+                                return
+                            }
+                            parsedJson.data?.let{list ->
+                                lifecycleScope.launch(IO) {
+                                    (requireActivity().application as YugiohApplication).db.cardDao()
+                                        .deleteAll()
+                                    (requireActivity().application as YugiohApplication).db.cardDao()
+                                        .insertAll(list.map {
+                                            HomeEntity(
+                                                name = it.name,
+                                                img = it.imageUrl,
+                                                smallImg = it.smallImg,
+                                                desc = it.desc,
+                                                level = it.level,
+                                                atk = it.atk,
+                                                def = it.def,
+                                                cardmarket_price = it.cardmarketPrice,
+                                                tcgPlayerPrice = it.tcgplayerPrice,
+                                                ebayPrice = it.ebay,
+                                                setName = it.setName,
+                                                setRarity = it.setRarity
+                                            )
+                                        })
+                                }
 
-                        val gson = Gson()
-                        val arrayCardType = object : TypeToken<List<Card>>() {}.type
-
-                        val models : List<Card> = gson.fromJson(resultsJSON.toString(), arrayCardType)
-                        recyclerView.adapter = ItemAdapter(models, this@HomeFragment)
-                        cards2 = models as ArrayList<Card>
-
-                        // Look for this in Logcat:
-                        Log.d("Response", resultsJSON.toString())
-                        Log.d("Response", "response successful")
+                            }
+                            cardAdapter.notifyDataSetChanged()
+                        } catch(e: JSONException){
+                            Log.e("Home Fragment", "Exception: $e")
+                        }
+                        //    val resultsJSON : JSONArray = json.jsonObject.getJSONArray("data")
+//
+                        //    val gson = Gson()
+                        //    val arrayCardType = object : TypeToken<List<Card>>() {}.type
+//
+                        //    val models : List<Card> = gson.fromJson(resultsJSON.toString(), arrayCardType)
+                        //    recyclerView.adapter = ItemAdapter(models, this@HomeFragment)
+                        //    card = models as ArrayList<Card>
+//
+                        //    // Look for this in Logcat:
+                        //    Log.d("Response", resultsJSON.toString())
+                        //    Log.d("Response", "response successful")
                     }
 
                     /*
@@ -134,7 +211,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
 
     }
 
-    override fun onItemClick(item: Card) {
+    override fun onItemClick(item: DisplayCard) {
         val name = item.name
 
         Toast.makeText(context, "test: " + item.name, Toast.LENGTH_SHORT).show()
@@ -180,7 +257,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
 
     private fun filter(text: String) {
         // creating a new array list to filter our data.
-        val filteredlist = ArrayList<Card>()
+        val filteredlist = ArrayList<DisplayCard>()
         // running a for loop to compare elements
         cards2.forEach{
             // checking if the entered string matched with any item of our recycler view.
@@ -197,7 +274,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
         } else {
             // at last we are passing that filtered
             // list to our adapter class.
-            rec.adapter = ItemAdapter(filteredlist, this@HomeFragment)
+            rec.adapter = context?.let{ItemAdapter(it.applicationContext,filteredlist, this@HomeFragment)}
         }
     }
 }

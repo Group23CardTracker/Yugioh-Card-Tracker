@@ -42,17 +42,17 @@ class CardDetailActivity : AppCompatActivity() {
         var imgUrl = ""
 
         // Get the name from the intent and add it to the card
-        val currentCard = intent.getSerializableExtra("theCard") as Card
+        val currentCard = intent.getSerializableExtra("theCard") as DisplayCard
         cardName.text = currentCard.name
         cardDesc.text = currentCard.desc
         cardLevel.text = "Level " + currentCard.level.toString()
         cardAtk.text = "Atk: " + currentCard.atk.toString()
         cardDef.text = "Def: " + currentCard.def.toString()
-        cardPrice.text = "Price: " + currentCard.prices?.get(0)?.cardmarket_price.toString()
+        cardPrice.text = "Price: " + currentCard.cardmarket_price
         Glide.with(this@CardDetailActivity)
-            .load(currentCard.images?.get(0)?.imageUrl.toString())
+            .load(currentCard.imageUrl)
             .into(cardImage)
-        imgUrl = currentCard.images?.get(0)?.imageUrl.toString()
+        imgUrl = currentCard.imageUrl.toString()
 
         findViewById<ImageView>(R.id.cardImage).setOnClickListener{
             // If there is an image url then open a new activity to show large picture.

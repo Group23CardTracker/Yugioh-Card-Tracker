@@ -198,8 +198,9 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
             rec.adapter = context?.let { BannedAdapter(it.applicationContext, filteredlist) }
         }
     }
+    
 
-    override fun onItemClick(item: Card) {
+    override fun onItemClick(item: DisplayCard) {
         TODO("Not yet implemented")
     }
 

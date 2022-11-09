@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class ItemAdapter(private val items: List<Card>,
+class ItemAdapter(private val context: Context, private val items: List<DisplayCard>,
                   private val mListener: HomeInteractionListener?
     ) :
     RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
@@ -62,10 +62,10 @@ class ItemAdapter(private val items: List<Card>,
             itemView.setOnClickListener(this)
         }
 
-        fun bind(curItem: Card) {
+        fun bind(curItem: DisplayCard) {
             cardName.text = curItem.name
-            Glide.with(itemView)
-                .load(curItem.images?.get(0)?.imageUrlSmall.toString())
+            Glide.with(context)
+                .load(curItem.imageUrl)
                 .into(cardImage)
         }
 

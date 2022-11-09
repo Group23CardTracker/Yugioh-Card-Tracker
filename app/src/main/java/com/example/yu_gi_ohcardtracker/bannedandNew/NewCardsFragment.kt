@@ -207,7 +207,7 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
         }
     }
 
-    override fun onItemClick(item: Card) {
+    override fun onItemClick(item: DisplayCard) {
         TODO("Not yet implemented")
     }
 
