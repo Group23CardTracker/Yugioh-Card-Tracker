@@ -2,6 +2,7 @@ package com.example.yu_gi_ohcardtracker
 
 import android.content.Context
 import android.content.Intent
+import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class ItemAdapter(private val items: List<Card>,
+class ItemAdapter(private val items: MutableList<DisplayCard>,
                   private val mListener: HomeInteractionListener?
     ) :
     RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
@@ -34,15 +35,15 @@ class ItemAdapter(private val items: List<Card>,
     }
 
     // creating a variable for array list and context.
-    private var cardModelArrayList: ArrayList<Card>? = null
+    private var cardModelArrayList: ArrayList<DisplayCard>? = null
 
     // creating a constructor for our variables.
-    fun CardAdapter(theCards: ArrayList<Card>, context: Context?) {
+    fun CardAdapter(theCards: ArrayList<DisplayCard>, context: Context?) {
         this.cardModelArrayList = theCards
     }
 
     // method for filtering our recyclerview items.
-    fun filterList(filterlist: ArrayList<Card>) {
+    fun filterList(filterlist: ArrayList<DisplayCard>) {
         // below line is to add our filtered
         // list in our card array list.
         cardModelArrayList = filterlist
@@ -62,7 +63,7 @@ class ItemAdapter(private val items: List<Card>,
             itemView.setOnClickListener(this)
         }
 
-        fun bind(curItem: Card) {
+        fun bind(curItem: DisplayCard) {
             cardName.text = curItem.name
             Glide.with(itemView)
                 .load(curItem.imageUrl)

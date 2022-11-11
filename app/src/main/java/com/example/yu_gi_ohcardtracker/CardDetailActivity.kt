@@ -4,8 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
@@ -48,7 +52,7 @@ class CardDetailActivity : AppCompatActivity() {
             // Setting the label at the top menu to the card name
             this.setTitle(currentCard.name)
             cardDesc.text = currentCard.desc
-            cardLevel.text = "Level " + currentCard.level.toString()
+            cardLevel.text = "Level: " + currentCard.level.toString()
             cardAtk.text = "Atk: " + currentCard.atk.toString()
             cardDef.text = "Def: " + currentCard.def.toString()
             cardPrice.text = "Price: $" + currentCard.cardmarket_price
@@ -56,37 +60,23 @@ class CardDetailActivity : AppCompatActivity() {
                 .load(currentCard.imageUrl)
                 .into(cardImage)
             imgUrl = currentCard.imageUrl.toString()
+            if(cardDef.text == "Def: null") {
+                cardDef.isGone = true
+            }
 
+            if(cardAtk.text == "Atk: null") {
+                cardAtk.isGone = true
+            }
+
+            if(cardLevel.text == "Level: null") {
+                cardLevel.isGone = true
+            }
             findViewById<ImageView>(R.id.cardImage).setOnClickListener {
                 // If there is an image url then open a new activity to show large picture.
                 if (imgUrl != null) {
                     val cardLargeIntent = Intent(this, CardLarge::class.java)
                     cardLargeIntent.putExtra("theCard", imgUrl)
                     cardLargeIntent.putExtra("theCardName", currentCard.name)
-                    this?.startActivity(cardLargeIntent)
-                }
-            }
-        } else{
-            val card = intent.getSerializableExtra("ACard") as Card
-            cardName.text = card.name
-            // Setting the label at the top menu to the card name
-            this.setTitle(card.name)
-            cardDesc.text = card.desc
-            cardLevel.text = "Level " + card.level.toString()
-            cardAtk.text = "Atk: " + card.atk.toString()
-            cardDef.text = "Def: " + card.def.toString()
-            cardPrice.text = "Price: $" + card.cardmarketPrice
-            Glide.with(this)
-                .load(card.imageUrl)
-                .into(cardImage)
-            imgUrl = card.imageUrl
-
-            findViewById<ImageView>(R.id.cardImage).setOnClickListener {
-                // If there is an image url then open a new activity to show large picture.
-                if (imgUrl != null) {
-                    val cardLargeIntent = Intent(this, CardLarge::class.java)
-                    cardLargeIntent.putExtra("theCard", imgUrl)
-                    cardLargeIntent.putExtra("theCardName", card.name)
                     this?.startActivity(cardLargeIntent)
                 }
             }

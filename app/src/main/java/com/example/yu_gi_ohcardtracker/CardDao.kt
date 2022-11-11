@@ -1,5 +1,6 @@
 package com.example.yu_gi_ohcardtracker
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -19,4 +20,7 @@ interface CardDao {
 
     @Query("DELETE FROM home_table")
     fun deleteAll()
+
+    @Query ("SELECT COUNT(*) FROM home_table")
+    fun getCount(): Int?
 }

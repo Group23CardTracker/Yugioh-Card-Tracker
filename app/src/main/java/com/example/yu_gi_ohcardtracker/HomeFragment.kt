@@ -1,6 +1,5 @@
 package com.example.yu_gi_ohcardtracker
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +12,6 @@ import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import okhttp3.Headers
 
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.lifecycleScope
@@ -29,10 +27,11 @@ import kotlin.collections.ArrayList
 
 class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractionListener {
 
-    private val cards = mutableListOf<Card>()
+    private val cards = mutableListOf<DisplayCard>()
     private lateinit var cardRecyclerView: RecyclerView
     private lateinit var cardAdapter: ItemAdapter
-    private var cards2 = arrayListOf<Card>()
+    private var cards2 = arrayListOf<DisplayCard>()
+    private var cardCount: Int = 0
     private lateinit var rec: RecyclerView
 
 
@@ -57,7 +56,9 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
             cardRecyclerView.addItemDecoration(dividerItemDecoration)
         }
         rec = cardRecyclerView
-        updateAdapter(progressBar)
+        cardAdapter = ItemAdapter(cards, this@HomeFragment)
+        cardRecyclerView.adapter = cardAdapter
+
 
         //val itemAdapter = ItemAdapter(cards, this@Home)
 
@@ -83,24 +84,14 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
 //            }
 //        }
 
-        return view
-    }
 
-    companion object {
+        lifecycleScope.launch(){
 
-    }
-
-
-    private fun updateAdapter(progressBar: ContentLoadingProgressBar) {
-
-        /*
-        lifecycleScope.launch{
             (requireActivity().application as YugiohApplication).db.cardDao().getAll().collect{ databaseList ->
                 databaseList.map {entity ->
                     DisplayCard(
                         entity.name,
                         entity.img,
-                        entity.smallImg,
                         entity.desc,
                         entity.level,
                         entity.atk,
@@ -115,15 +106,30 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
                 }.also{mappedList ->
                     cards.clear()
                     cards.addAll(mappedList)
+                    cardCount = cards.size
+                    Log.i("CARDLISTCOUNT", cardAdapter.itemCount.toString())
                     cards2 = mappedList as ArrayList<DisplayCard>
                     cardAdapter.notifyDataSetChanged()
+
+                    updateAdapter(progressBar)
+
+
                 }
             }
         }
 
-         */
-        val cardCount = cards.size
-        //Log.i("CARDLISTCOUNT", cardCount.toString())
+
+
+
+        return view
+    }
+
+    companion object {
+
+    }
+
+
+    private fun updateAdapter(progressBar: ContentLoadingProgressBar) {
 
 
         if (cardCount == 0) {
@@ -147,44 +153,49 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
                                     json.jsonObject.toString()
                                 )
 
-                                /*
-                            if(!isAdded){
-                                return
-                            }
+                                Log.i("CARDCOUNT PARSED", parsedJson.data?.size.toString())
 
-                            parsedJson.data?.let{list ->
-                                lifecycleScope.launch(IO) {
-                                    (requireActivity().application as YugiohApplication).db.cardDao()
-                                        .deleteAll()
-                                    (requireActivity().application as YugiohApplication).db.cardDao()
-                                        .insertAll(list.map {
-                                            HomeEntity(
-                                                name = it.name,
-                                                img = it.imageUrl,
-                                                smallImg = it.smallImg,
-                                                desc = it.desc,
-                                                level = it.level,
-                                                atk = it.atk,
-                                                def = it.def,
-                                                cardmarket_price = it.cardmarketPrice,
-                                                tcgPlayerPrice = it.tcgplayerPrice,
-                                                ebayPrice = it.ebay,
-                                                banStatus = it.banlistInfo?.banStatus,
-                                                setName = it.setName,
-                                                setRarity = it.setRarity
-                                            )
-                                        })
+                                if(!isAdded){
+                                    return
+                                }
+                                if (parsedJson.data?.size!! < cardCount){
+                                    Log.i("CARDCOUNT PARSED", "WE HERE")
+                                    return
+                                }
+                                parsedJson.data?.let{list ->
+                                    lifecycleScope.launch(IO) {
+
+
+                                        (requireActivity().application as YugiohApplication).db.cardDao()
+                                            .deleteAll()
+                                        (requireActivity().application as YugiohApplication).db.cardDao()
+                                            .insertAll(list.map {
+                                                HomeEntity(
+                                                    name = it.name,
+                                                    img = it.imageUrl,
+                                                    desc = it.desc,
+                                                    level = it.level,
+                                                    atk = it.atk,
+                                                    def = it.def,
+                                                    cardmarket_price = it.cardmarketPrice,
+                                                    tcgPlayerPrice = it.tcgplayerPrice,
+                                                    ebayPrice = it.ebay,
+                                                    banStatus = it.banlistInfo?.banStatus,
+                                                    setName = it.setName,
+                                                    setRarity = it.setRarity
+                                                )
+                                            })
+                                    }
+
                                 }
 
-                            }
-
-                             */
-                                parsedJson.data?.let { list ->
-                                    cards.addAll(list)
-                                    cardAdapter = ItemAdapter(cards, this@HomeFragment)
-                                    cardRecyclerView.adapter = cardAdapter
-                                    cards2 = cards as ArrayList<Card>
-                                }
+//
+//                                parsedJson.data?.let { list ->
+//                                    cards.addAll(list)
+//                                    cardAdapter = ItemAdapter(cards, this@HomeFragment)
+//                                    cardRecyclerView.adapter = cardAdapter
+//                                    cards2 = cards as ArrayList<DisplayCard>
+//                                }
 
                             } catch (e: JSONException) {
                                 Log.e("Home Fragment", "Exception: $e")
@@ -229,7 +240,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
 
     }
 
-    override fun onItemClick(item: Card) {
+    override fun onItemClick(item: DisplayCard) {
         val name = item.name
 
         // Toast.makeText(context, "test: " + item.name, Toast.LENGTH_SHORT).show()
@@ -275,7 +286,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
 
     private fun filter(text: String) {
         // creating a new array list to filter our data.
-        val filteredlist = ArrayList<Card>()
+        val filteredlist = ArrayList<DisplayCard>()
         // running a for loop to compare elements
         cards2.forEach {
             // checking if the entered string matched with any item of our recycler view.
@@ -285,6 +296,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
                 filteredlist.add(it)
             }
         }
+
         if (filteredlist.isEmpty()) {
             // if no item is added in filtered list we are
             // displaying a toast message as no data found.
