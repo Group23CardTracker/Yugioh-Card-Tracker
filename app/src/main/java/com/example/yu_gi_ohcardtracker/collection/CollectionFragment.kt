@@ -31,7 +31,7 @@ class CollectionFragment(override val menuInflater: Any) : Fragment(), HomeInter
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        activity?.setTitle("My Collection")
+        activity?.setTitle("Favorites")
     }
 
     override fun onCreateView(
@@ -81,13 +81,13 @@ class CollectionFragment(override val menuInflater: Any) : Fragment(), HomeInter
                     collectionCards.clear()
                     collectionCards.addAll(mappedList)
                     cards2 = mappedList as ArrayList<DisplayCard>
-                    collectionCardAdapter.notifyDataSetChanged()
                     var total = 0.00
                     for(card in collectionCards){
                         var price = card.cardmarket_price?.toDoubleOrNull()
                         if(price != null) total += price
                     }
                     valueTextView.text = "$$total"
+                    collectionCardAdapter.notifyDataSetChanged()
                 }
             }
         }

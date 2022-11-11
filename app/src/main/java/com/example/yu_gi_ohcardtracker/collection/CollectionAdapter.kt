@@ -2,6 +2,7 @@ package com.example.yu_gi_ohcardtracker.collection
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +53,7 @@ class CollectionAdapter(private val context: Context, private val collectionCard
         private val collectionCardTextView = itemView.findViewById<TextView>(R.id.collection_name)
         private val collectionCardImageView = itemView.findViewById<ImageView>(R.id.collection_image)
         private val valueTextView = itemView.findViewById<TextView>(R.id.collection_value)
+        private val statusTextView = itemView.findViewById<TextView>(R.id.banStatus)
 
         init{
             itemView.setOnClickListener(this)
@@ -60,6 +62,16 @@ class CollectionAdapter(private val context: Context, private val collectionCard
         fun bind(collectionCard: DisplayCard){
             collectionCardTextView.text = collectionCard.name
             valueTextView.text = "$" + collectionCard.cardmarket_price
+            val bantext = collectionCard.banStatus
+            statusTextView.text = bantext
+            //Change the text color for status
+            if(bantext == "Banned") statusTextView.setTextColor(Color.RED)
+            else if(bantext == "Limited") statusTextView.setTextColor(Color.parseColor("#FFA500"))
+            else if(bantext == "Semi-Limited") statusTextView.setTextColor(Color.YELLOW)
+            else {
+                statusTextView.text = "Legal"
+                statusTextView.setTextColor(Color.GREEN)
+            }
 
             Glide.with(context).load(collectionCard.imageUrl).into(collectionCardImageView)
         }
