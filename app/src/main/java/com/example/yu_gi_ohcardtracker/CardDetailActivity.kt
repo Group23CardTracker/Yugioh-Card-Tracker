@@ -45,6 +45,8 @@ class CardDetailActivity : AppCompatActivity() {
         val currentCard = intent.getSerializableExtra("theCard")
         if(currentCard is DisplayCard) {
             cardName.text = currentCard.name
+            // Setting the label at the top menu to the card name
+            this.setTitle(currentCard.name)
             cardDesc.text = currentCard.desc
             cardLevel.text = "Level " + currentCard.level.toString()
             cardAtk.text = "Atk: " + currentCard.atk.toString()
@@ -60,12 +62,15 @@ class CardDetailActivity : AppCompatActivity() {
                 if (imgUrl != null) {
                     val cardLargeIntent = Intent(this, CardLarge::class.java)
                     cardLargeIntent.putExtra("theCard", imgUrl)
+                    cardLargeIntent.putExtra("theCardName", currentCard.name)
                     this?.startActivity(cardLargeIntent)
                 }
             }
         } else{
             val card = intent.getSerializableExtra("ACard") as Card
             cardName.text = card.name
+            // Setting the label at the top menu to the card name
+            this.setTitle(card.name)
             cardDesc.text = card.desc
             cardLevel.text = "Level " + card.level.toString()
             cardAtk.text = "Atk: " + card.atk.toString()
@@ -81,6 +86,7 @@ class CardDetailActivity : AppCompatActivity() {
                 if (imgUrl != null) {
                     val cardLargeIntent = Intent(this, CardLarge::class.java)
                     cardLargeIntent.putExtra("theCard", imgUrl)
+                    cardLargeIntent.putExtra("theCardName", card.name)
                     this?.startActivity(cardLargeIntent)
                 }
             }

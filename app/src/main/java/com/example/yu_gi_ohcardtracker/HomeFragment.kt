@@ -40,6 +40,8 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        // Setting the label at the top menu to "All cards"
+        activity?.setTitle("All Cards")
     }
 
     override fun onCreateView(

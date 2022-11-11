@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_home -> fragment = fragment1
                 R.id.action_banlist -> fragment = fragment2
                 R.id.action_newcards -> fragment = fragment3
+
             }
             fragmentManager.beginTransaction().replace(R.id.rlContainer, fragment).commit()
             true

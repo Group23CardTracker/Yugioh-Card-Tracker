@@ -35,7 +35,8 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
+        // Setting the label at the top menu to "banned cards"
+        activity?.setTitle("Banned Cards")
     }
 
     override fun onCreateView(

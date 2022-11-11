@@ -3,7 +3,6 @@ package com.example.yu_gi_ohcardtracker.bannedandNew
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
@@ -36,6 +35,8 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        // Setting the label at the top menu to "new cards"
+        activity?.setTitle("New Cards")
     }
 
     override fun onCreateView(

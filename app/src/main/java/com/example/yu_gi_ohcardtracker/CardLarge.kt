@@ -16,7 +16,9 @@ class CardLarge : AppCompatActivity() {
 
         cardImage = findViewById(R.id.cardImage)
         val currentCard = intent.getSerializableExtra("theCard")
-
+        val cardName = intent.getSerializableExtra("theCardName")
+        // Setting the label at the top menu to the card name
+        this.setTitle(cardName.toString())
         Glide.with(this@CardLarge)
             .load(currentCard)
             .into(cardImage)
