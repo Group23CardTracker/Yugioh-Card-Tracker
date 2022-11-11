@@ -32,7 +32,6 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
     private val cards = mutableListOf<Card>()
     private lateinit var cardRecyclerView: RecyclerView
     private lateinit var cardAdapter: ItemAdapter
-
     private var cards2 = arrayListOf<Card>()
     private lateinit var rec: RecyclerView
 
@@ -123,30 +122,32 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
         }
 
          */
+        val cardCount = cards.size
+        //Log.i("CARDLISTCOUNT", cardCount.toString())
 
 
+        if (cardCount == 0) {
+            progressBar.show()
 
-        progressBar.show()
+            // Create and set up an AsyncHTTPClient() here
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+            client[
+                    "https://db.ygoprodeck.com/api/v7/cardinfo.php",
+                    object : JsonHttpResponseHandler() {
+                        override fun onSuccess(
+                            statusCode: Int,
+                            headers: Headers,
+                            json: JsonHttpResponseHandler.JSON
+                        ) {
+                            progressBar.hide()
+                            try {
+                                val parsedJson = createJson().decodeFromString(
+                                    SearchData.serializer(),
+                                    json.jsonObject.toString()
+                                )
 
-        // Create and set up an AsyncHTTPClient() here
-        val client = AsyncHttpClient()
-        val params = RequestParams()
-        client[
-                "https://db.ygoprodeck.com/api/v7/cardinfo.php",
-                object : JsonHttpResponseHandler() {
-                    override fun onSuccess(
-                        statusCode: Int,
-                        headers: Headers,
-                        json: JsonHttpResponseHandler.JSON
-                    ) {
-                        progressBar.hide()
-                        try {
-                            val parsedJson = createJson().decodeFromString(
-                                SearchData.serializer(),
-                                json.jsonObject.toString()
-                            )
-
-                            /*
+                                /*
                             if(!isAdded){
                                 return
                             }
@@ -178,50 +179,53 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
                             }
 
                              */
-                            parsedJson.data?.let { list ->
-                                cards.addAll(list)
-                                cardAdapter = ItemAdapter(cards, this@HomeFragment)
-                                cardRecyclerView.adapter = cardAdapter
-                                cards2 = cards as ArrayList<Card>
+                                parsedJson.data?.let { list ->
+                                    cards.addAll(list)
+                                    cardAdapter = ItemAdapter(cards, this@HomeFragment)
+                                    cardRecyclerView.adapter = cardAdapter
+                                    cards2 = cards as ArrayList<Card>
+                                }
+
+                            } catch (e: JSONException) {
+                                Log.e("Home Fragment", "Exception: $e")
                             }
-
-                        } catch (e: JSONException) {
-                            Log.e("Home Fragment", "Exception: $e")
+                            //    val resultsJSON : JSONArray = json.jsonObject.getJSONArray("data")
+//
+                            //    val gson = Gson()
+                            //    val arrayCardType = object : TypeToken<List<Card>>() {}.type
+//
+                            //    val models : List<Card> = gson.fromJson(resultsJSON.toString(), arrayCardType)
+                            //    recyclerView.adapter = ItemAdapter(models, this@HomeFragment)
+                            //    card = models as ArrayList<Card>
+//
+                            //    // Look for this in Logcat:
+                            //    Log.d("Response", resultsJSON.toString())
+                            //    Log.d("Response", "response successful")
                         }
-                        //    val resultsJSON : JSONArray = json.jsonObject.getJSONArray("data")
-//
-                        //    val gson = Gson()
-                        //    val arrayCardType = object : TypeToken<List<Card>>() {}.type
-//
-                        //    val models : List<Card> = gson.fromJson(resultsJSON.toString(), arrayCardType)
-                        //    recyclerView.adapter = ItemAdapter(models, this@HomeFragment)
-                        //    card = models as ArrayList<Card>
-//
-                        //    // Look for this in Logcat:
-                        //    Log.d("Response", resultsJSON.toString())
-                        //    Log.d("Response", "response successful")
-                    }
 
-                    /*
+                        /*
                      * The onFailure function gets called when
                      * HTTP response status is "4XX" (eg. 401, 403, 404)
                      */
-                    override fun onFailure(
-                        statusCode: Int,
-                        headers: Headers?,
-                        errorResponse: String,
-                        t: Throwable?
-                    ) {
-                        // The wait for a response is over
-                        progressBar.hide()
+                        override fun onFailure(
+                            statusCode: Int,
+                            headers: Headers?,
+                            errorResponse: String,
+                            t: Throwable?
+                        ) {
+                            // The wait for a response is over
+                            progressBar.hide()
 
-                        // If the error is not null, log it!
-                        t?.message?.let {
-                            Log.e("Response", errorResponse)
+                            // If the error is not null, log it!
+                            t?.message?.let {
+                                Log.e("Response", errorResponse)
+                            }
                         }
-                    }
-                }]
-
+                    }]
+        }
+        else{
+            progressBar.hide()
+        }
 
     }
 
@@ -284,7 +288,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
         if (filteredlist.isEmpty()) {
             // if no item is added in filtered list we are
             // displaying a toast message as no data found.
-            Toast.makeText(context, "No Data Found..", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(context, "No Data Found..", Toast.LENGTH_SHORT).show()
         } else {
             // at last we are passing that filtered
             // list to our adapter class.
