@@ -152,7 +152,7 @@ class CollectionFragment(override val menuInflater: Any) : Fragment(), HomeInter
     }
 
 
-    override fun onItemClick(item: Card) {
+    override fun onItemClick(item: DisplayCard) {
         TODO("Not yet implemented")
     }
 }

@@ -118,7 +118,6 @@ class CardDetailActivity : AppCompatActivity() {
                     }
                     addButton.text = "Remove from Collection"
                 }
-                finish()
             }
 
             findViewById<ImageView>(R.id.cardImage).setOnClickListener {
