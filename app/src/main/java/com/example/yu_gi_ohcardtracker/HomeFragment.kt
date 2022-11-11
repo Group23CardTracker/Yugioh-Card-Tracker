@@ -226,7 +226,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
     override fun onItemClick(item: Card) {
         val name = item.name
 
-        Toast.makeText(context, "test: " + item.name, Toast.LENGTH_SHORT).show()
+        // Toast.makeText(context, "test: " + item.name, Toast.LENGTH_SHORT).show()
         val cardDetailIntent = Intent(context, CardDetailActivity::class.java)
         cardDetailIntent.putExtra("ACard", item)
         cardDetailIntent.putExtra("theCard", item)
