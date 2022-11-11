@@ -41,7 +41,6 @@ data class Card (
     val cardmarketPrice = prices?.firstOrNull{it.cardmarket_price != null}?.cardmarket_price ?: ""
     val tcgplayerPrice = prices?.firstOrNull{it.tcgPlayerPrice != null}?.tcgPlayerPrice ?: ""
     val ebay = prices?.firstOrNull{it.ebayPrice != null}?.ebayPrice ?: ""
-    val smallImg = img?.firstOrNull{it.imageUrlSmall != null}?.imageUrlSmall ?: ""
 }
 
 @Keep
@@ -75,7 +74,5 @@ data class CardPrices (
 @Serializable
 data class CardImages (
     @SerialName("image_url")
-    val url: String?,
-    @SerialName("image_url_small")
-    val imageUrlSmall: String? = null,
+    val url: String?
 ): java.io.Serializable

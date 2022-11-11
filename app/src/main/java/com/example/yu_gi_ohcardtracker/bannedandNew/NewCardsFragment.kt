@@ -63,7 +63,6 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
                     DisplayCard(
                         entity.name,
                         entity.img,
-                        entity.smallImg,
                         entity.desc,
                         entity.level,
                         entity.atk,
@@ -143,7 +142,6 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
                                     NewCardEntity(
                                         name = it.name,
                                         img = it.imageUrl,
-                                        smallImg = it.smallImg,
                                         desc = it.desc,
                                         level = it.level,
                                         atk = it.atk,
@@ -224,7 +222,7 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
         }
     }
 
-    override fun onItemClick(item: DisplayCard) {
+    override fun onItemClick(item: Card) {
         TODO("Not yet implemented")
     }
 

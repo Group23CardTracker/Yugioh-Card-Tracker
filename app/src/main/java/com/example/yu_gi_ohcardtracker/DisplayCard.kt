@@ -3,7 +3,6 @@ package com.example.yu_gi_ohcardtracker
 data class DisplayCard(
     val name: String?,
     val imageUrl: String?,
-    val smallImg: String?,
     val desc: String?,
     val level: Int?,
     val atk: Int?,

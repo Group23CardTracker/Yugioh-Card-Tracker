@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.yu_gi_ohcardtracker.CardDetailActivity
 import com.example.yu_gi_ohcardtracker.DisplayCard
 import com.example.yu_gi_ohcardtracker.R
 
@@ -66,10 +67,9 @@ class NewCardAdapter(private val context: Context, private val newCards: List<Di
         }
 
         override fun onClick(v: View?){
-            val bannedCard = newCards[absoluteAdapterPosition]
-            val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra("CardName", bannedCard.name)
-            intent.putExtra("CardImage", bannedCard.imageUrl)
+            val newcard = newCards[absoluteAdapterPosition]
+            val intent = Intent(context, CardDetailActivity::class.java)
+            intent.putExtra("theCard", newcard)
             // For the search
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)

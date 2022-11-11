@@ -66,7 +66,6 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
                     DisplayCard(
                         entity.name,
                         entity.img,
-                        entity.smallImg,
                         entity.desc,
                         entity.level,
                         entity.atk,
@@ -130,7 +129,6 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
                                     BannedEntity(
                                         name = it.name,
                                         img = it.imageUrl,
-                                        smallImg = it.smallImg,
                                         desc = it.desc,
                                         level = it.level,
                                         atk = it.atk,
@@ -216,7 +214,7 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
     }
     
 
-    override fun onItemClick(item: DisplayCard) {
+    override fun onItemClick(item: Card) {
         TODO("Not yet implemented")
     }
 

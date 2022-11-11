@@ -9,7 +9,6 @@ data class NewCardEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "img") val img: String?,
-    @ColumnInfo(name = "smallImg") val smallImg: String?,
     @ColumnInfo(name = "desc") val desc: String?,
     @ColumnInfo(name = "level") val level: Int?,
     @ColumnInfo(name = "atk") val atk: Int?,

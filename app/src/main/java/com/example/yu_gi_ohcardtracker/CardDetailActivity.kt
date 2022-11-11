@@ -42,24 +42,47 @@ class CardDetailActivity : AppCompatActivity() {
         var imgUrl = ""
 
         // Get the name from the intent and add it to the card
-        val currentCard = intent.getSerializableExtra("theCard") as DisplayCard
-        cardName.text = currentCard.name
-        cardDesc.text = currentCard.desc
-        cardLevel.text = "Level " + currentCard.level.toString()
-        cardAtk.text = "Atk: " + currentCard.atk.toString()
-        cardDef.text = "Def: " + currentCard.def.toString()
-        cardPrice.text = "Price: " + currentCard.cardmarket_price
-        Glide.with(this)
-            .load(currentCard.imageUrl)
-            .into(cardImage)
-        imgUrl = currentCard.imageUrl.toString()
+        val currentCard = intent.getSerializableExtra("theCard")
+        if(currentCard is DisplayCard) {
+            cardName.text = currentCard.name
+            cardDesc.text = currentCard.desc
+            cardLevel.text = "Level " + currentCard.level.toString()
+            cardAtk.text = "Atk: " + currentCard.atk.toString()
+            cardDef.text = "Def: " + currentCard.def.toString()
+            cardPrice.text = "Price: " + currentCard.cardmarket_price
+            Glide.with(this)
+                .load(currentCard.imageUrl)
+                .into(cardImage)
+            imgUrl = currentCard.imageUrl.toString()
 
-        findViewById<ImageView>(R.id.cardImage).setOnClickListener{
-            // If there is an image url then open a new activity to show large picture.
-            if (imgUrl != null) {
-                val cardLargeIntent = Intent(this, CardLarge::class.java)
-                cardLargeIntent.putExtra("theCard", imgUrl)
-                this?.startActivity(cardLargeIntent)
+            findViewById<ImageView>(R.id.cardImage).setOnClickListener {
+                // If there is an image url then open a new activity to show large picture.
+                if (imgUrl != null) {
+                    val cardLargeIntent = Intent(this, CardLarge::class.java)
+                    cardLargeIntent.putExtra("theCard", imgUrl)
+                    this?.startActivity(cardLargeIntent)
+                }
+            }
+        } else{
+            val card = intent.getSerializableExtra("ACard") as Card
+            cardName.text = card.name
+            cardDesc.text = card.desc
+            cardLevel.text = "Level " + card.level.toString()
+            cardAtk.text = "Atk: " + card.atk.toString()
+            cardDef.text = "Def: " + card.def.toString()
+            cardPrice.text = "Price: " + card.cardmarketPrice
+            Glide.with(this)
+                .load(card.imageUrl)
+                .into(cardImage)
+            imgUrl = card.imageUrl
+
+            findViewById<ImageView>(R.id.cardImage).setOnClickListener {
+                // If there is an image url then open a new activity to show large picture.
+                if (imgUrl != null) {
+                    val cardLargeIntent = Intent(this, CardLarge::class.java)
+                    cardLargeIntent.putExtra("theCard", imgUrl)
+                    this?.startActivity(cardLargeIntent)
+                }
             }
         }
 

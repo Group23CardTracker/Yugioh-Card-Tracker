@@ -29,12 +29,12 @@ import kotlin.collections.ArrayList
 
 class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractionListener {
 
-    private val cards = mutableListOf<DisplayCard>()
+    private val cards = mutableListOf<Card>()
     private lateinit var cardRecyclerView: RecyclerView
     private lateinit var cardAdapter: ItemAdapter
 
-    private var cards2 = arrayListOf<DisplayCard>()
-    private lateinit var rec : RecyclerView
+    private var cards2 = arrayListOf<Card>()
+    private lateinit var rec: RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,12 +51,12 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
         val progressBar = view.findViewById<View>(R.id.progress) as ContentLoadingProgressBar
         cardRecyclerView = view.findViewById<View>(R.id.itemsRv) as RecyclerView
         val context = view.context
-        cardRecyclerView.layoutManager = LinearLayoutManager(context).also{
+        cardRecyclerView.layoutManager = LinearLayoutManager(context).also {
             val dividerItemDecoration = DividerItemDecoration(context, it.orientation)
             cardRecyclerView.addItemDecoration(dividerItemDecoration)
         }
         rec = cardRecyclerView
-        updateAdapter(progressBar, context)
+        updateAdapter(progressBar)
 
         //val itemAdapter = ItemAdapter(cards, this@Home)
 
@@ -90,10 +90,9 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
     }
 
 
-    private fun updateAdapter(progressBar: ContentLoadingProgressBar, context: Context) {
-        cardAdapter = ItemAdapter(context,cards, this@HomeFragment)
-        cardRecyclerView.adapter = cardAdapter
+    private fun updateAdapter(progressBar: ContentLoadingProgressBar) {
 
+        /*
         lifecycleScope.launch{
             (requireActivity().application as YugiohApplication).db.cardDao().getAll().collect{ databaseList ->
                 databaseList.map {entity ->
@@ -121,6 +120,8 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
             }
         }
 
+         */
+
 
 
         progressBar.show()
@@ -130,22 +131,24 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
         val params = RequestParams()
         client[
                 "https://db.ygoprodeck.com/api/v7/cardinfo.php",
-                object : JsonHttpResponseHandler()
-                {
+                object : JsonHttpResponseHandler() {
                     override fun onSuccess(
                         statusCode: Int,
                         headers: Headers,
                         json: JsonHttpResponseHandler.JSON
                     ) {
                         progressBar.hide()
-                        try{
+                        try {
                             val parsedJson = createJson().decodeFromString(
                                 SearchData.serializer(),
                                 json.jsonObject.toString()
                             )
+
+                            /*
                             if(!isAdded){
                                 return
                             }
+
                             parsedJson.data?.let{list ->
                                 lifecycleScope.launch(IO) {
                                     (requireActivity().application as YugiohApplication).db.cardDao()
@@ -171,8 +174,16 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
                                 }
 
                             }
-                            cardAdapter.notifyDataSetChanged()
-                        } catch(e: JSONException){
+
+                             */
+                            parsedJson.data?.let { list ->
+                                cards.addAll(list)
+                                cardAdapter = ItemAdapter(cards, this@HomeFragment)
+                                cardRecyclerView.adapter = cardAdapter
+                                cards2 = Card as ArrayList<Card>
+                            }
+
+                        } catch (e: JSONException) {
                             Log.e("Home Fragment", "Exception: $e")
                         }
                         //    val resultsJSON : JSONArray = json.jsonObject.getJSONArray("data")
@@ -212,11 +223,12 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
 
     }
 
-    override fun onItemClick(item: DisplayCard) {
+    override fun onItemClick(item: Card) {
         val name = item.name
 
         Toast.makeText(context, "test: " + item.name, Toast.LENGTH_SHORT).show()
         val cardDetailIntent = Intent(context, CardDetailActivity::class.java)
+        cardDetailIntent.putExtra("ACard", item)
         cardDetailIntent.putExtra("theCard", item)
         context?.startActivity(cardDetailIntent)
     }
@@ -255,12 +267,11 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
     }
 
 
-
     private fun filter(text: String) {
         // creating a new array list to filter our data.
-        val filteredlist = ArrayList<DisplayCard>()
+        val filteredlist = ArrayList<Card>()
         // running a for loop to compare elements
-        cards2.forEach{
+        cards2.forEach {
             // checking if the entered string matched with any item of our recycler view.
             if (it.name?.lowercase()?.contains(text.lowercase(Locale.getDefault())) == true) {
                 // if the item is matched we are
@@ -275,7 +286,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
         } else {
             // at last we are passing that filtered
             // list to our adapter class.
-            rec.adapter = context?.let{ItemAdapter(it.applicationContext,filteredlist, this@HomeFragment)}
+            rec.adapter = ItemAdapter(filteredlist, this@HomeFragment)
         }
     }
 }
