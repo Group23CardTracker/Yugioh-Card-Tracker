@@ -5,17 +5,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import com.example.yu_gi_ohcardtracker.collection.CollectionEntity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import okhttp3.Headers
 import org.json.JSONArray
 
@@ -28,6 +34,7 @@ class CardDetailActivity : AppCompatActivity() {
     private lateinit var cardAtk: TextView
     private lateinit var cardDef: TextView
     private lateinit var cardPrice: TextView
+    private lateinit var addButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +48,7 @@ class CardDetailActivity : AppCompatActivity() {
         cardAtk = findViewById(R.id.cardAtk)
         cardDef = findViewById(R.id.cardDef)
         cardPrice = findViewById(R.id.cardPrice)
+        addButton = findViewById(R.id.add_button)
 
 
         var imgUrl = ""
@@ -71,6 +79,48 @@ class CardDetailActivity : AppCompatActivity() {
             if(cardLevel.text == "Level: null") {
                 cardLevel.isGone = true
             }
+            var exists = 0
+            lifecycleScope.launch(IO){
+                exists = (application as YugiohApplication).collectiondb.collectionDao().exists(currentCard.name)
+                if(exists > 0){
+                    addButton.text = "Remove from Collection"
+                }
+                else{
+                    Log.e("DetailActivity", "Card doesn't exist " + currentCard.name)
+                }
+            }
+
+            addButton.setOnClickListener {
+                if(addButton.text == "Remove from Collection"){
+                    lifecycleScope.launch(IO){
+                        (application as YugiohApplication).collectiondb.collectionDao().delete(currentCard.name)
+                    }
+                    addButton.text = "Add to Collection"
+                }
+                else{
+                    lifecycleScope.launch(IO) {
+                        (application as YugiohApplication).collectiondb.collectionDao().insert(
+                            CollectionEntity(
+                                name = currentCard.name,
+                                img = currentCard.imageUrl,
+                                desc = currentCard.desc,
+                                level = currentCard.level,
+                                atk = currentCard.atk,
+                                def = currentCard.def,
+                                cardmarket_price = currentCard.cardmarket_price,
+                                tcgPlayerPrice = currentCard.tcgPlayerPrice,
+                                ebayPrice = currentCard.ebayPrice,
+                                banStatus = currentCard.banStatus,
+                                setName = currentCard.setName,
+                                setRarity = currentCard.setRarity
+                            )
+                        )
+                    }
+                    addButton.text = "Remove from Collection"
+                }
+                finish()
+            }
+
             findViewById<ImageView>(R.id.cardImage).setOnClickListener {
                 // If there is an image url then open a new activity to show large picture.
                 if (imgUrl != null) {
@@ -82,7 +132,7 @@ class CardDetailActivity : AppCompatActivity() {
             }
         }
 
-
     }
+
 
 }

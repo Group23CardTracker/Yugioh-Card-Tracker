@@ -20,4 +20,10 @@
         android:icon="@drawable/ic_launcher_foreground"
         android:title="New"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_collection"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_collections_bookmark_24"
+        android:title="Collection"
+        app:showAsAction="ifRoom" />
 </menu>

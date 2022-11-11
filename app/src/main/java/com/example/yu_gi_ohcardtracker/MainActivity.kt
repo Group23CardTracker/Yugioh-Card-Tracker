@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.yu_gi_ohcardtracker.bannedandNew.BanList
 import com.example.yu_gi_ohcardtracker.bannedandNew.NewCards
+import com.example.yu_gi_ohcardtracker.collection.CollectionFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.serialization.json.Json
 import com.example.yu_gi_ohcardtracker.databinding.ActivityMainBinding
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         val fragment1: Fragment = HomeFragment(menuInflater)
         val fragment2: Fragment = BanList(menuInflater)
         val fragment3: Fragment = NewCards(menuInflater)
+        val fragment4: Fragment = CollectionFragment(menuInflater)
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
 
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_home -> fragment = fragment1
                 R.id.action_banlist -> fragment = fragment2
                 R.id.action_newcards -> fragment = fragment3
+                R.id.action_collection -> fragment = fragment4
 
             }
             fragmentManager.beginTransaction().replace(R.id.rlContainer, fragment).commit()
