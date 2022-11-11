@@ -9,9 +9,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.yu_gi_ohcardtracker.DisplayCard
 import com.example.yu_gi_ohcardtracker.R
 
-class NewCardAdapter(private val context: Context, private val newCards: List<DisplaySCard>) :
+class NewCardAdapter(private val context: Context, private val newCards: List<DisplayCard>) :
     RecyclerView.Adapter<NewCardAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,15 +26,15 @@ class NewCardAdapter(private val context: Context, private val newCards: List<Di
     }
 
     // creating a variable for array list and context.
-    private var cardModelArrayList: ArrayList<DisplaySCard>? = null
+    private var cardModelArrayList: ArrayList<DisplayCard>? = null
 
     // creating a constructor for our variables.
-    fun CardAdapter(theCards: ArrayList<DisplaySCard>, context: Context?) {
+    fun CardAdapter(theCards: ArrayList<DisplayCard>, context: Context?) {
         this.cardModelArrayList = theCards
     }
 
     // method for filtering our recyclerview items.
-    fun filterList(filterlist: ArrayList<DisplaySCard>) {
+    fun filterList(filterlist: ArrayList<DisplayCard>) {
         // below line is to add our filtered
         // list in our card array list.
         cardModelArrayList = filterlist
@@ -56,7 +57,7 @@ class NewCardAdapter(private val context: Context, private val newCards: List<Di
             itemView.setOnClickListener(this)
         }
 
-        fun bind(newCard: DisplaySCard){
+        fun bind(newCard: DisplayCard){
             newCardTextView.text = newCard.name
             setNameTextView.text = "Set: " + newCard.setName
             setRarityTextView.text = "Rarity: " + newCard.setRarity

@@ -26,12 +26,12 @@ private const val TAG = "NewCardFragment"
 
 class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionListener {
 
-    private val newCards = mutableListOf<DisplaySCard>()
+    private val newCards = mutableListOf<DisplayCard>()
     private lateinit var newCardAdapter: NewCardAdapter
     private lateinit var newCardsRecyclerView: RecyclerView
 
     // For the search
-    private var cards2 = arrayListOf<DisplaySCard>()
+    private var cards2 = arrayListOf<DisplayCard>()
     private lateinit var rec : RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,17 +60,25 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
         lifecycleScope.launch{
             (requireActivity().application as YugiohApplication).newcarddb.newCardDao().getAll().collect{ databaseList ->
                 databaseList.map {entity ->
-                    DisplaySCard(
+                    DisplayCard(
                         entity.name,
-                        null,
-                        entity.imageUrl,
+                        entity.img,
+                        entity.smallImg,
+                        entity.desc,
+                        entity.level,
+                        entity.atk,
+                        entity.def,
+                        entity.cardmarket_price,
+                        entity.tcgPlayerPrice,
+                        entity.ebayPrice,
+                        entity.banStatus,
                         entity.setName,
                         entity.setRarity
                     )
                 }.also{mappedList ->
                     newCards.clear()
                     newCards.addAll(mappedList)
-                    cards2 = mappedList as ArrayList<DisplaySCard>
+                    cards2 = mappedList as ArrayList<DisplayCard>
                     newCardAdapter.notifyDataSetChanged()
                 }
             }
@@ -120,7 +128,7 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
                 progressBar.hide()
                 try{
                     val parsedJson = createJson().decodeFromString(
-                        SearchNewData.serializer(),
+                        SearchData.serializer(),
                         json.jsonObject.toString()
                     )
                     if(!isAdded){
@@ -134,7 +142,16 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
                                 .insertAll(list.map {
                                     NewCardEntity(
                                         name = it.name,
-                                        imageUrl = it.imageUrl,
+                                        img = it.imageUrl,
+                                        smallImg = it.smallImg,
+                                        desc = it.desc,
+                                        level = it.level,
+                                        atk = it.atk,
+                                        def = it.def,
+                                        cardmarket_price = it.cardmarketPrice,
+                                        tcgPlayerPrice = it.tcgplayerPrice,
+                                        ebayPrice = it.ebay,
+                                        banStatus = it.banlistInfo?.banStatus,
                                         setName = it.setName,
                                         setRarity = it.setRarity
                                     )
@@ -186,7 +203,7 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
 
     private fun filter(text: String) {
         // creating a new array list to filter our data.
-        val filteredlist = ArrayList<DisplaySCard>()
+        val filteredlist = ArrayList<DisplayCard>()
         // running a for loop to compare elements
         cards2.forEach{
             // checking if the entered string matched with any item of our recycler view.

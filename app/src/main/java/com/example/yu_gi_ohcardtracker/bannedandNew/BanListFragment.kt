@@ -25,12 +25,12 @@ private const val TAG = "BannedListFragment"
 
 class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListener {
 
-    private val bannedCards = mutableListOf<DisplaySCard>()
+    private val bannedCards = mutableListOf<DisplayCard>()
     private lateinit var bannedCardRecyclerView: RecyclerView
     private lateinit var bannedCardAdapter: BannedAdapter
 
     // For the search
-    private var cards2 = arrayListOf<DisplaySCard>()
+    private var cards2 = arrayListOf<DisplayCard>()
     private lateinit var rec : RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,10 +63,18 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
         lifecycleScope.launch{
             (requireActivity().application as YugiohApplication).bandb.bannedDao().getAll().collect{ databaseList ->
                 databaseList.map {entity ->
-                    DisplaySCard(
+                    DisplayCard(
                         entity.name,
+                        entity.img,
+                        entity.smallImg,
+                        entity.desc,
+                        entity.level,
+                        entity.atk,
+                        entity.def,
+                        entity.cardmarket_price,
+                        entity.tcgPlayerPrice,
+                        entity.ebayPrice,
                         entity.banStatus,
-                        entity.imageUrl,
                         entity.setName,
                         entity.setRarity
                     )
@@ -74,7 +82,7 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
                     bannedCards.clear()
                     bannedCards.addAll(mappedList)
                     // for the search
-                    cards2 = mappedList as ArrayList<DisplaySCard>
+                    cards2 = mappedList as ArrayList<DisplayCard>
                     bannedCardAdapter.notifyDataSetChanged()
                 }
             }
@@ -107,7 +115,7 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
                 progressBar.hide()
                 try{
                     val parsedJson = createJson().decodeFromString(
-                        SearchNewData.serializer(),
+                        SearchData.serializer(),
                         json.jsonObject.toString()
                     )
                     if(!isAdded){
@@ -121,8 +129,16 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
                                 .insertAll(list.map {
                                     BannedEntity(
                                         name = it.name,
+                                        img = it.imageUrl,
+                                        smallImg = it.smallImg,
+                                        desc = it.desc,
+                                        level = it.level,
+                                        atk = it.atk,
+                                        def = it.def,
+                                        cardmarket_price = it.cardmarketPrice,
+                                        tcgPlayerPrice = it.tcgplayerPrice,
+                                        ebayPrice = it.ebay,
                                         banStatus = it.banlistInfo?.banStatus,
-                                        imageUrl = it.imageUrl,
                                         setName = it.setName,
                                         setRarity = it.setRarity
                                     )
@@ -178,7 +194,7 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
 
     private fun filter(text: String) {
         // creating a new array list to filter our data.
-        val filteredlist = ArrayList<DisplaySCard>()
+        val filteredlist = ArrayList<DisplayCard>()
         // running a for loop to compare elements
         cards2.forEach{
             // checking if the entered string matched with any item of our recycler view.

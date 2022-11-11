@@ -108,7 +108,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
                         entity.cardmarket_price,
                         entity.tcgPlayerPrice,
                         entity.ebayPrice,
-                        entity.ebayPrice,
+                        entity.banStatus,
                         entity.setName,
                         entity.setRarity
                     )
@@ -163,6 +163,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
                                                 cardmarket_price = it.cardmarketPrice,
                                                 tcgPlayerPrice = it.tcgplayerPrice,
                                                 ebayPrice = it.ebay,
+                                                banStatus = it.banlistInfo?.banStatus,
                                                 setName = it.setName,
                                                 setRarity = it.setRarity
                                             )

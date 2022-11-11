@@ -49,7 +49,7 @@ class CardDetailActivity : AppCompatActivity() {
         cardAtk.text = "Atk: " + currentCard.atk.toString()
         cardDef.text = "Def: " + currentCard.def.toString()
         cardPrice.text = "Price: " + currentCard.cardmarket_price
-        Glide.with(this@CardDetailActivity)
+        Glide.with(this)
             .load(currentCard.imageUrl)
             .into(cardImage)
         imgUrl = currentCard.imageUrl.toString()

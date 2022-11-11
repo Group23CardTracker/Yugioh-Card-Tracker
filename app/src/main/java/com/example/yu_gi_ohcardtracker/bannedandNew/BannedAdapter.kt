@@ -10,9 +10,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.yu_gi_ohcardtracker.CardDetailActivity
+import com.example.yu_gi_ohcardtracker.DisplayCard
 import com.example.yu_gi_ohcardtracker.R
 
-class BannedAdapter(private val context: Context, private val banned: List<DisplaySCard>) :
+class BannedAdapter(private val context: Context, private val banned: List<DisplayCard>) :
     RecyclerView.Adapter<BannedAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,7 +40,7 @@ class BannedAdapter(private val context: Context, private val banned: List<Displ
             itemView.setOnClickListener(this)
         }
 
-        fun bind(bannedCard: DisplaySCard){
+        fun bind(bannedCard: DisplayCard){
             bannedCardTextView.text = bannedCard.name
             val bantext = bannedCard.banStatus
             bannedCardStatusTextView.text = bantext
@@ -52,9 +54,8 @@ class BannedAdapter(private val context: Context, private val banned: List<Displ
 
         override fun onClick(v: View?){
             val bannedCard = banned[absoluteAdapterPosition]
-            val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra("CardName", bannedCard.name)
-            intent.putExtra("CardImage", bannedCard.imageUrl)
+            val intent = Intent(context, CardDetailActivity::class.java)
+            intent.putExtra("theCard", bannedCard)
             // For the search
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)

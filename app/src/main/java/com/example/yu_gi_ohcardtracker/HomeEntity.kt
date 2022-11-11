@@ -18,6 +18,7 @@ data class HomeEntity(
     @ColumnInfo(name = "cardmarket_price") val cardmarket_price: String,
     @ColumnInfo(name = "tcgPlayerPrice") val tcgPlayerPrice: String,
     @ColumnInfo(name = "ebayPrice") val ebayPrice: String,
+    @ColumnInfo(name = "banStatus") val banStatus: String?,
     @ColumnInfo(name = "setName") val setName: String?,
     @ColumnInfo(name = "setRarity") val setRarity: String?,
 )
