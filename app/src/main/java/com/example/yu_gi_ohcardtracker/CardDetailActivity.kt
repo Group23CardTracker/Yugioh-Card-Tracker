@@ -49,7 +49,7 @@ class CardDetailActivity : AppCompatActivity() {
             cardLevel.text = "Level " + currentCard.level.toString()
             cardAtk.text = "Atk: " + currentCard.atk.toString()
             cardDef.text = "Def: " + currentCard.def.toString()
-            cardPrice.text = "Price: " + currentCard.cardmarket_price
+            cardPrice.text = "Price: $" + currentCard.cardmarket_price
             Glide.with(this)
                 .load(currentCard.imageUrl)
                 .into(cardImage)
@@ -70,7 +70,7 @@ class CardDetailActivity : AppCompatActivity() {
             cardLevel.text = "Level " + card.level.toString()
             cardAtk.text = "Atk: " + card.atk.toString()
             cardDef.text = "Def: " + card.def.toString()
-            cardPrice.text = "Price: " + card.cardmarketPrice
+            cardPrice.text = "Price: $" + card.cardmarketPrice
             Glide.with(this)
                 .load(card.imageUrl)
                 .into(cardImage)

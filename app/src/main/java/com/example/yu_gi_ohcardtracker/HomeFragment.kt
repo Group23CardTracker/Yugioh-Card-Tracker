@@ -180,7 +180,7 @@ class HomeFragment(override val menuInflater: Any)  : Fragment(), HomeInteractio
                                 cards.addAll(list)
                                 cardAdapter = ItemAdapter(cards, this@HomeFragment)
                                 cardRecyclerView.adapter = cardAdapter
-                                cards2 = Card as ArrayList<Card>
+                                cards2 = cards as ArrayList<Card>
                             }
 
                         } catch (e: JSONException) {

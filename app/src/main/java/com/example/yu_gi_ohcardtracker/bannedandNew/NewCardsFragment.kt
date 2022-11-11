@@ -6,7 +6,6 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
-import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -88,9 +87,8 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val progressBar = view.findViewById<View>(R.id.progress) as ContentLoadingProgressBar
 
-        fetchCards(progressBar)
+        fetchCards()
     }
 
     companion object {
@@ -99,8 +97,7 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
 //        }
     }
 
-    private fun fetchCards(progressBar: ContentLoadingProgressBar){
-        progressBar.show()
+    private fun fetchCards(){
 
         val c = Calendar.getInstance()
         var d = c.time
@@ -119,12 +116,10 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
                 throwable: Throwable?
             ) {
                 // The wait for a response is over
-                progressBar.hide()
                 Log.e(TAG, "Failed to fetch Cards: $statusCode")
             }
             override fun onSuccess(statusCode: Int, headers: Headers, json: JSON){
                 Log.i(TAG, "Successfully fetched Cards: $json")
-                progressBar.hide()
                 try{
                     val parsedJson = createJson().decodeFromString(
                         SearchData.serializer(),

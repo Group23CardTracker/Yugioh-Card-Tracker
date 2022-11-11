@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
-import androidx.core.widget.ContentLoadingProgressBar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -91,13 +90,12 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val progressBar = view.findViewById<View>(R.id.progress) as ContentLoadingProgressBar
 
-        fetchCards(progressBar)
+        fetchCards()
     }
 
-    private fun fetchCards(progressBar: ContentLoadingProgressBar){
-        progressBar.show()
+    private fun fetchCards(){
+
         val client = AsyncHttpClient()
         client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?banlist=tcg", object : JsonHttpResponseHandler(){
             override fun onFailure(
@@ -106,12 +104,10 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
                 response: String?,
                 throwable: Throwable?
             ) {
-                progressBar.hide()
                 Log.e(TAG, "Failed to fetch Cards: $statusCode")
             }
             override fun onSuccess(statusCode: Int, headers: Headers, json: JSON){
                 Log.i(TAG, "Successfully fetched Cards: $json")
-                progressBar.hide()
                 try{
                     val parsedJson = createJson().decodeFromString(
                         SearchData.serializer(),
