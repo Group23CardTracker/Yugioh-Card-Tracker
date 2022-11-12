@@ -92,3 +92,6 @@ Here is a video walkthrough of home and collection
 
 <img src='https://github.com/Group23CardTracker/Yugioh-Card-Tracker/blob/vector/walkthrough.gif' title='Video Walkthrough2' width='' alt='Video Walkthrough2' />
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
+## Youtube demo
+[![Yu-Gi-Oh card tracker demo](https://img.youtube.com/vi/xRPngwfF78E/0.jpg)](https://www.youtube.com/watch?v=xRPngwfF78E)
