@@ -78,6 +78,17 @@
 [Add picture of your hand sketched wireframes in this section]
 <img src="https://github.com/Group23CardTracker/Yugioh-Card-Tracker/blob/main/wireframes.jpg" width=600>
 
-### [BONUS] Digital Wireframes & Mockups
+## Video Walkthrough
 
-### [BONUS] Interactive Prototype
+Here's a walkthrough of implemented user stories:
+
+Video walkthrough of banlist and new cards.
+
+<img src='https://i.imgur.com/LVBbjUV.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+Video walkthrough of home screen and card details.
+
+
+Here is a video walkthrough of home and collection
+
+<img src='https://github.com/Group23CardTracker/Yugioh-Card-Tracker/blob/vector/walkthrough.gif' title='Video Walkthrough2' width='' alt='Video Walkthrough2' />
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
