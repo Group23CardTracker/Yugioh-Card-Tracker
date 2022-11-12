@@ -90,5 +90,5 @@ Video walkthrough of home screen and card details.
 
 Here is a video walkthrough of home and collection
 
-<img src='https://github.com/Group23CardTracker/Yugioh-Card-Tracker/blob/main/walkthrough.gif' title='Video Walkthrough2' width='' alt='Video Walkthrough2' />
+<img src='https://github.com/Group23CardTracker/Yugioh-Card-Tracker/blob/vector/walkthrough.gif' title='Video Walkthrough2' width='' alt='Video Walkthrough2' />
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
