@@ -5,19 +5,25 @@
     <item
         android:id="@+id/action_home"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/ic_baseline_home_24"
         android:title="Home"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_banlist"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/ic_baseline_browser_not_supported_24"
         android:title="Banlist"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_newcards"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/ic_baseline_fiber_new_24"
         android:title="New"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_collection"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_collections_bookmark_24"
+        android:title="Collection"
         app:showAsAction="ifRoom" />
 </menu>
