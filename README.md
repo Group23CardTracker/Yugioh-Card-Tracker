@@ -86,12 +86,12 @@
 - [x] **User can view newly released cards offline**
 - [x] **User can select an item from a list to view in greater detail**
 - [x] **User can switch between viewing different lists**
-- [ ] **User can favorite a card**
+- [x] **User can favorite a card**
 - [x] **User can view every card**
-- [ ] **User can search for a specific card**
+- [x] **User can search for a specific card**
 - [x] **User can view detailed information of the card**
 - [x] **User can see pricing of the card**
-- [ ] **User can maintain a personal digital collection on the app**
+- [x] **User can maintain a personal digital collection on the app**
 
 ## Video Walkthrough
 
