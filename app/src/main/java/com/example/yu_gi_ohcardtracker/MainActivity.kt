@@ -1,15 +1,22 @@
 package com.example.yu_gi_ohcardtracker
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.example.yu_gi_ohcardtracker.bannedandNew.BanList
 import com.example.yu_gi_ohcardtracker.bannedandNew.NewCards
 import com.example.yu_gi_ohcardtracker.collection.CollectionFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.serialization.json.Json
 import com.example.yu_gi_ohcardtracker.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 fun createJson() = Json {
     isLenient = true
@@ -54,6 +61,9 @@ class MainActivity : AppCompatActivity() {
 
         // Set default selection
         bottomNavigationView.selectedItemId = R.id.action_home
-    }
 
+
+
+
+    }
 }

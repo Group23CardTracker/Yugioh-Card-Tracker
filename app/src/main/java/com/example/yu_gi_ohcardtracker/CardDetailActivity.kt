@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import okhttp3.Headers
+import okhttp3.internal.notifyAll
 import org.json.JSONArray
 
 class CardDetailActivity : AppCompatActivity() {
@@ -118,6 +119,10 @@ class CardDetailActivity : AppCompatActivity() {
                     }
                     addButton.text = "Remove from Collection"
                 }
+//                val data = Intent()
+//                data.putExtra("value", true)
+//                setResult(RESULT_OK, data)
+//                finish()
             }
 
             findViewById<ImageView>(R.id.cardImage).setOnClickListener {
@@ -127,6 +132,7 @@ class CardDetailActivity : AppCompatActivity() {
                     cardLargeIntent.putExtra("theCard", imgUrl)
                     cardLargeIntent.putExtra("theCardName", currentCard.name)
                     this?.startActivity(cardLargeIntent)
+
                 }
             }
         }
