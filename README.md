@@ -94,4 +94,6 @@ Here is a video walkthrough of home and collection
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Youtube demo
-[![Yu-Gi-Oh card tracker demo](https://img.youtube.com/vi/xRPngwfF78E/0.jpg)](https://www.youtube.com/watch?v=xRPngwfF78E)
+[![Yu-Gi-Oh card tracker demo]
+(https://img.youtube.com/vi/xRPngwfF78E/0.jpg)]
+(https://www.youtube.com/watch?v=xRPngwfF78E "Youtube")
