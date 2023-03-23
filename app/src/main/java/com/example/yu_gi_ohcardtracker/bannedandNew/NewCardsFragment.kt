@@ -107,9 +107,9 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
         c.add(Calendar.DATE, -60)
         d = c.time
         val startDate = df.format(d)
-        println("https://db.ygoprodeck.com/api/v7/cardinfo.php?&startdate=$startDate&enddate=$endDate&dataregion=tcg_date")
+        println("https://db.ygoprodeck.com/api/v7/cardinfo.php?&startdate=$startDate&enddate=$endDate&dataregion=ocg_date")
         val client = AsyncHttpClient()
-        client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?&startdate=$startDate&enddate=$endDate&dataregion=tcg_date", object : JsonHttpResponseHandler(){
+        client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?&startdate=1/10/2022&enddate=11/11/2022&dateregion=ocg_date", object : JsonHttpResponseHandler(){
             override fun onFailure(
                 statusCode: Int,
                 headers: Headers?,
