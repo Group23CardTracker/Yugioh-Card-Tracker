@@ -42,7 +42,7 @@ class BannedAdapter(private val context: Context, private val banned: List<Displ
 
         fun bind(bannedCard: DisplayCard){
             bannedCardTextView.text = bannedCard.name
-            val bantext = bannedCard.banStatus
+            val bantext = bannedCard.tcgBanStatus
             bannedCardStatusTextView.text = bantext
             //Change the text color for status
             if(bantext == "Banned") bannedCardStatusTextView.setTextColor(Color.RED)

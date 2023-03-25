@@ -70,7 +70,8 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
                         entity.cardmarket_price,
                         entity.tcgPlayerPrice,
                         entity.ebayPrice,
-                        entity.banStatus,
+                        entity.tcgBanStatus,
+                        entity.ocgBanStatus,
                         entity.setName,
                         entity.setRarity
                     )
@@ -153,7 +154,8 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
                                         cardmarket_price = it.cardmarketPrice,
                                         tcgPlayerPrice = it.tcgplayerPrice,
                                         ebayPrice = it.ebay,
-                                        banStatus = it.banlistInfo?.banStatus,
+                                        tcgBanStatus = it.banlistInfo?.tcgBanStatus,
+                                        ocgBanStatus = it.banlistInfo?.ocgBanStatus,
                                         setName = it.setName,
                                         setRarity = it.setRarity
                                     )

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.lifecycleScope
@@ -73,7 +72,8 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
                         entity.cardmarket_price,
                         entity.tcgPlayerPrice,
                         entity.ebayPrice,
-                        entity.banStatus,
+                        entity.tcgBanStatus,
+                        entity.ocgBanStatus,
                         entity.setName,
                         entity.setRarity
                     )
@@ -133,7 +133,8 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
                                         cardmarket_price = it.cardmarketPrice,
                                         tcgPlayerPrice = it.tcgplayerPrice,
                                         ebayPrice = it.ebay,
-                                        banStatus = it.banlistInfo?.banStatus,
+                                        tcgBanStatus = it.banlistInfo?.tcgBanStatus,
+                                        ocgBanStatus = it.banlistInfo?.ocgBanStatus,
                                         setName = it.setName,
                                         setRarity = it.setRarity
                                     )

@@ -73,9 +73,10 @@ class CollectionFragment(override val menuInflater: Any) : Fragment(), HomeInter
                         entity.cardmarket_price,
                         entity.tcgPlayerPrice,
                         entity.ebayPrice,
-                        entity.banStatus,
+                        entity.tcgBanStatus,
+                        entity.ocgBanStatus,
                         entity.setName,
-                        entity.setRarity
+                        entity.setRarity,
                     )
                 }.also{mappedList ->
                     collectionCards.clear()

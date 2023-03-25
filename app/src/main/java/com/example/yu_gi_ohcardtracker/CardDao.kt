@@ -1,6 +1,5 @@
 package com.example.yu_gi_ohcardtracker
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -10,13 +9,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CardDao {
     @Query("SELECT * FROM home_table")
-    fun getAll(): Flow<List<HomeEntity>>
+    fun getAll(): Flow<List<CardEntity>>
 
     @Insert
-    fun insertAll(items: List<HomeEntity>)
+    fun insertAll(items: List<CardEntity>)
 
     @Insert
-    fun insert(item: HomeEntity)
+    fun insert(item: CardEntity)
 
     @Query("DELETE FROM home_table")
     fun deleteAll()

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "home_table")
-data class HomeEntity(
+data class CardEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "img") val img: String?,
@@ -17,7 +17,8 @@ data class HomeEntity(
     @ColumnInfo(name = "cardmarket_price") val cardmarket_price: String,
     @ColumnInfo(name = "tcgPlayerPrice") val tcgPlayerPrice: String,
     @ColumnInfo(name = "ebayPrice") val ebayPrice: String,
-    @ColumnInfo(name = "banStatus") val banStatus: String?,
+    @ColumnInfo(name = "tcgBanStatus") val tcgBanStatus: String?,
+    @ColumnInfo(name = "ocgBanStatus") val ocgBanStatus: String?,
     @ColumnInfo(name = "setName") val setName: String?,
     @ColumnInfo(name = "setRarity") val setRarity: String?,
 )
