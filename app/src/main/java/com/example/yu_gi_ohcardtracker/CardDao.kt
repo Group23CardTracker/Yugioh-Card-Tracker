@@ -11,6 +11,12 @@ interface CardDao {
     @Query("SELECT * FROM home_table")
     fun getAll(): Flow<List<CardEntity>>
 
+    @Query("SELECT * FROM home_table WHERE tcgBanStatus != :blank")
+    fun getAllBannedTCG(blank: String): Flow<List<CardEntity>>
+
+    @Query("SELECT * FROM home_table WHERE ocgBanStatus != :blank")
+    fun getAllBannedOCG(blank: String): Flow<List<CardEntity>>
+
     @Insert
     fun insertAll(items: List<CardEntity>)
 

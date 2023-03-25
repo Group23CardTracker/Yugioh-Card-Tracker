@@ -35,7 +35,7 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         // Setting the label at the top menu to "banned cards"
-        activity?.setTitle("Banned Cards")
+        activity?.title = "Banned Cards"
     }
 
     override fun onCreateView(
@@ -60,7 +60,7 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
 
         //get data from database
         lifecycleScope.launch{
-            (requireActivity().application as YugiohApplication).bandb.bannedDao().getAll().collect{ databaseList ->
+            (requireActivity().application as YugiohApplication).db.cardDao().getAllBannedTCG("").collect{ databaseList ->
                 databaseList.map {entity ->
                     DisplayCard(
                         entity.name,
@@ -87,66 +87,6 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
             }
         }
         return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        fetchCards()
-    }
-
-    private fun fetchCards(){
-
-        val client = AsyncHttpClient()
-        client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?banlist=tcg", object : JsonHttpResponseHandler(){
-            override fun onFailure(
-                statusCode: Int,
-                headers: Headers?,
-                response: String?,
-                throwable: Throwable?
-            ) {
-                Log.e(TAG, "Failed to fetch Cards: $statusCode")
-            }
-            override fun onSuccess(statusCode: Int, headers: Headers, json: JSON){
-                Log.i(TAG, "Successfully fetched Cards: $json")
-                try{
-                    val parsedJson = createJson().decodeFromString(
-                        SearchData.serializer(),
-                        json.jsonObject.toString()
-                    )
-                    if(!isAdded){
-                        return
-                    }
-                    parsedJson.data?.let{list ->
-                        lifecycleScope.launch(IO) {
-                            (requireActivity().application as YugiohApplication).bandb.bannedDao()
-                                .deleteAll()
-                            (requireActivity().application as YugiohApplication).bandb.bannedDao()
-                                .insertAll(list.map {
-                                    BannedEntity(
-                                        name = it.name,
-                                        img = it.imageUrl,
-                                        desc = it.desc,
-                                        level = it.level,
-                                        atk = it.atk,
-                                        def = it.def,
-                                        cardmarket_price = it.cardmarketPrice,
-                                        tcgPlayerPrice = it.tcgplayerPrice,
-                                        ebayPrice = it.ebay,
-                                        tcgBanStatus = it.banlistInfo?.tcgBanStatus,
-                                        ocgBanStatus = it.banlistInfo?.ocgBanStatus,
-                                        setName = it.setName,
-                                        setRarity = it.setRarity
-                                    )
-                                })
-                        }
-                    }
-                    bannedCardAdapter.notifyDataSetChanged()
-                } catch(e: JSONException){
-                    Log.e(TAG, "Exception: $e")
-                }
-            }
-        })
     }
 
     companion object {
