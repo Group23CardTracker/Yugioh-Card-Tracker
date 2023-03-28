@@ -14,8 +14,16 @@ import com.example.yu_gi_ohcardtracker.CardDetailActivity
 import com.example.yu_gi_ohcardtracker.DisplayCard
 import com.example.yu_gi_ohcardtracker.R
 
-class BannedAdapter(private val context: Context, private val banned: List<DisplayCard>) :
+class BannedAdapter(private val context: Context, private var banned: ArrayList<DisplayCard>) :
     RecyclerView.Adapter<BannedAdapter.ViewHolder>(){
+
+    fun setData(data: List<DisplayCard>){
+        banned.run{
+            clear()
+            addAll(data)
+        }
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_banlist, parent, false)
@@ -25,6 +33,11 @@ class BannedAdapter(private val context: Context, private val banned: List<Displ
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val bannedcard = banned[position]
         holder.bind(bannedcard)
+    }
+
+    fun filterList(filterlist: ArrayList<DisplayCard>){
+        banned = filterlist
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = banned.size
@@ -42,12 +55,18 @@ class BannedAdapter(private val context: Context, private val banned: List<Displ
 
         fun bind(bannedCard: DisplayCard){
             bannedCardTextView.text = bannedCard.name
-            val bantext = bannedCard.banStatus
-            bannedCardStatusTextView.text = bantext
+            val banText = if(tcgSwitchSingletion.tcgOn){
+                bannedCard.tcgBanStatus
+            } else{
+                bannedCard.ocgBanStatus
+            }
+            bannedCardStatusTextView.text = banText
             //Change the text color for status
-            if(bantext == "Banned") bannedCardStatusTextView.setTextColor(Color.RED)
-            else if(bantext == "Limited") bannedCardStatusTextView.setTextColor(Color.parseColor("#FFA500"))
-            else bannedCardStatusTextView.setTextColor(Color.YELLOW)
+            when (banText) {
+                "Banned" -> bannedCardStatusTextView.setTextColor(Color.RED)
+                "Limited" -> bannedCardStatusTextView.setTextColor(Color.parseColor("#FFA500"))
+                else -> bannedCardStatusTextView.setTextColor(Color.YELLOW)
+            }
 
             Glide.with(context).load(bannedCard.imageUrl).into(bannedCardImageView)
         }
@@ -57,7 +76,7 @@ class BannedAdapter(private val context: Context, private val banned: List<Displ
             val intent = Intent(context, CardDetailActivity::class.java)
             intent.putExtra("theCard", bannedCard)
             // For the search
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
         }
     }

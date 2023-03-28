@@ -1,8 +1,6 @@
 package com.example.yu_gi_ohcardtracker
 
 import android.support.annotation.Keep
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -56,7 +54,9 @@ data class Sets(
 @Serializable
 data class BanStatus(
     @SerialName("ban_tcg")
-    val banStatus: String? = null
+    val tcgBanStatus: String? = null,
+    @SerialName("ban_ocg")
+    val ocgBanStatus: String? = null
 ) : java.io.Serializable
 
 @Keep

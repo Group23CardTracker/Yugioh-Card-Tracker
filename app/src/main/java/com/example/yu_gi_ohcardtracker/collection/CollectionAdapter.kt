@@ -62,7 +62,7 @@ class CollectionAdapter(private val context: Context, private val collectionCard
         fun bind(collectionCard: DisplayCard){
             collectionCardTextView.text = collectionCard.name
             valueTextView.text = "$" + collectionCard.cardmarket_price
-            val bantext = collectionCard.banStatus
+            val bantext = collectionCard.tcgBanStatus
             statusTextView.text = bantext
             //Change the text color for status
             if(bantext == "Banned") statusTextView.setTextColor(Color.RED)

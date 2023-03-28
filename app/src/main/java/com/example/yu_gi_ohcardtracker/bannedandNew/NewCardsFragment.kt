@@ -70,7 +70,8 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
                         entity.cardmarket_price,
                         entity.tcgPlayerPrice,
                         entity.ebayPrice,
-                        entity.banStatus,
+                        entity.tcgBanStatus,
+                        entity.ocgBanStatus,
                         entity.setName,
                         entity.setRarity
                     )
@@ -99,17 +100,25 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
     }
 
     private fun fetchCards(){
-
-        val c = Calendar.getInstance()
-        var d = c.time
+        //Get Today's date
+        val today = Calendar.getInstance()
         val df = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-        val endDate = df.format(d)
-        c.add(Calendar.DATE, -60)
-        d = c.time
-        val startDate = df.format(d)
-        println("https://db.ygoprodeck.com/api/v7/cardinfo.php?&startdate=$startDate&enddate=$endDate&dataregion=ocg_date")
+        val end = today
+
+        //Get date 30days ago
+        today.add(Calendar.DATE, -30)
+        val start = today.time
+        val startDate = df.format(start)
+
+        //Get date 60 days from now
+        end.add(Calendar.DATE, 60)
+        val ending = end.time
+        val endDate = df.format(ending)
+
+        Log.i(TAG, "fetchCards: $startDate $endDate")
+        Log.i(TAG,"https://db.ygoprodeck.com/api/v7/cardinfo.php?&startdate=$startDate&enddate=$endDate&dataregion=ocg_date")
         val client = AsyncHttpClient()
-        client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?&startdate=1/10/2022&enddate=11/11/2022&dateregion=ocg_date", object : JsonHttpResponseHandler(){
+        client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?&startdate=$startDate&enddate=$endDate&dateregion=ocg_date", object : JsonHttpResponseHandler(){
             override fun onFailure(
                 statusCode: Int,
                 headers: Headers?,
@@ -145,7 +154,8 @@ class NewCards(override val menuInflater: Any) : Fragment(), HomeInteractionList
                                         cardmarket_price = it.cardmarketPrice,
                                         tcgPlayerPrice = it.tcgplayerPrice,
                                         ebayPrice = it.ebay,
-                                        banStatus = it.banlistInfo?.banStatus,
+                                        tcgBanStatus = it.banlistInfo?.tcgBanStatus,
+                                        ocgBanStatus = it.banlistInfo?.ocgBanStatus,
                                         setName = it.setName,
                                         setRarity = it.setRarity
                                     )

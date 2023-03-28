@@ -10,7 +10,8 @@ data class DisplayCard(
     val cardmarket_price: String?,
     val tcgPlayerPrice: String?,
     val ebayPrice: String,
-    val banStatus: String?,
+    val tcgBanStatus: String?,
+    val ocgBanStatus: String?,
     val setName: String?,
     val setRarity: String?,
 ) : java.io.Serializable
