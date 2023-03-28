@@ -3,33 +3,27 @@ package com.example.yu_gi_ohcardtracker.bannedandNew
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.appcompat.widget.AppCompatToggleButton
 import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.codepath.asynchttpclient.AsyncHttpClient
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import com.example.yu_gi_ohcardtracker.*
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import okhttp3.Headers
-import org.json.JSONException
-import java.util.*
+import kotlin.collections.ArrayList
 
 private const val TAG = "BannedListFragment"
 
-class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListener {
+class BanList: Fragment(), View.OnClickListener {
 
-    private val bannedCards = mutableListOf<DisplayCard>()
+    private val bannedCards = ArrayList<DisplayCard>()
     private lateinit var bannedCardRecyclerView: RecyclerView
     private lateinit var bannedCardAdapter: BannedAdapter
+    private lateinit var banListToggle: AppCompatToggleButton
 
-    // For the search
-    private var cards2 = arrayListOf<DisplayCard>()
-    private lateinit var rec : RecyclerView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,14 +47,51 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
         bannedCardRecyclerView.setHasFixedSize(true)
         bannedCardAdapter = BannedAdapter(view.context, bannedCards)
         bannedCardRecyclerView.adapter = bannedCardAdapter
+        banListToggle = view.findViewById(R.id.banlistToggleButton)
 
 
-        // Set the rec for search to newcards
-        rec = bannedCardRecyclerView
+        if(!tcgSwitchSingletion.tcgOn){
+            getOCGCards()
+        }
+        else{
+            getTCGCards()
+        }
+        banListToggle.setOnClickListener(this)
+        return view
+    }
 
-        //get data from database
+    private fun getTCGCards(){
         lifecycleScope.launch{
             (requireActivity().application as YugiohApplication).db.cardDao().getAllBannedTCG("").collect{ databaseList ->
+                databaseList.map {entity ->
+                    DisplayCard(
+                        entity.name,
+                        entity.img,
+                        entity.desc,
+                        entity.level,
+                        entity.atk,
+                        entity.def,
+                        entity.cardmarket_price,
+                        entity.tcgPlayerPrice,
+                        entity.ebayPrice,
+                        entity.tcgBanStatus,
+                        entity.ocgBanStatus,
+
+                        entity.setName,
+                        entity.setRarity
+                    )
+                }.also{mappedList ->
+                    bannedCards.clear()
+                    bannedCards.addAll(mappedList)
+                    bannedCardAdapter.setData(mappedList)
+                }
+            }
+        }
+    }
+
+    private fun getOCGCards(){
+        lifecycleScope.launch{
+            (requireActivity().application as YugiohApplication).db.cardDao().getAllBannedOCG("").collect{ databaseList ->
                 databaseList.map {entity ->
                     DisplayCard(
                         entity.name,
@@ -80,19 +111,10 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
                 }.also{mappedList ->
                     bannedCards.clear()
                     bannedCards.addAll(mappedList)
-                    // for the search
-                    cards2 = mappedList as ArrayList<DisplayCard>
-                    bannedCardAdapter.notifyDataSetChanged()
+                    bannedCardAdapter.setData(mappedList)
                 }
             }
         }
-        return view
-    }
-
-    companion object {
-//        fun newInstance(): BanList {
-//            return BanList()
-//        }
     }
 
     // For the search
@@ -102,12 +124,13 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
         inflater.inflate(R.menu.search_menu, menu)
         // Initialise menu item search bar
         // with id and take its object
-        val searchViewItem = menu.findItem(R.id.actionSearch)
-        val searchView = MenuItemCompat.getActionView(searchViewItem) as SearchView
+        val searchItem: MenuItem = menu.findItem(R.id.actionSearch)
+        val searchView: SearchView = searchItem.actionView as SearchView
 
         // attach setOnQueryTextListener
         // to search view defined above
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+        android.widget.SearchView.OnQueryTextListener{
             // Override onQueryTextSubmit method which is call when submit query is searched
             override fun onQueryTextSubmit(query: String): Boolean {
                 // If the list contains the search query than filter the adapter
@@ -132,9 +155,9 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
         // creating a new array list to filter our data.
         val filteredlist = ArrayList<DisplayCard>()
         // running a for loop to compare elements
-        cards2.forEach{
+        bannedCards.forEach{
             // checking if the entered string matched with any item of our recycler view.
-            if (it.name?.lowercase()?.contains(text.lowercase(Locale.getDefault())) == true) {
+            if (it.name?.lowercase()!!.contains(text.lowercase())) {
                 // if the item is matched we are
                 // adding it to our filtered list.
                 filteredlist.add(it)
@@ -147,13 +170,19 @@ class BanList(override val menuInflater: Any) : Fragment(), HomeInteractionListe
         } else {
             // at last we are passing that filtered
             // list to our adapter class.
-            rec.adapter = context?.let { BannedAdapter(it.applicationContext, filteredlist) }
+            bannedCardAdapter.filterList(filteredlist)
         }
     }
-    
 
-    override fun onItemClick(item: DisplayCard) {
-        TODO("Not yet implemented")
+    override fun onClick(p0: View?) {
+        if(banListToggle.isChecked){
+            getOCGCards()
+            Log.i(TAG, "Switching")
+        }
+        else{
+            getTCGCards()
+        }
+        tcgSwitchSingletion.toggleState()
     }
 
 

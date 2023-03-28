@@ -31,7 +31,7 @@ class CollectionFragment(override val menuInflater: Any) : Fragment(), HomeInter
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        activity?.setTitle("Favorites")
+        activity?.title = "Favorites"
     }
 
     override fun onCreateView(
